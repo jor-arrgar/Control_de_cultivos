@@ -1,0 +1,5 @@
+streamlit == 1.21.0
+pandas == 1.5.3
+plotly == 5.15.0
+st_aggrid
+seaborn == 0.12.2
