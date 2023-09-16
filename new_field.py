@@ -63,7 +63,7 @@ def read_previous_data():
         st.session_state.loaded_data = True
         
     if not st.session_state.loaded_data:
-        st.text(MayConv('* "explotación" como archivo de conjunto de parcelas, no como elemento de la PAC').all_mayus(mayus=mayus_))
+        #st.text(MayConv('* "explotación" como archivo de conjunto de parcelas, no como elemento de la PAC').all_mayus(mayus=mayus_))
         st.error(MayConv('No hay datos cargados').all_mayus(mayus=mayus_))
         
         
