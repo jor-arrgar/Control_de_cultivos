@@ -46,7 +46,7 @@ def read_previous_data():
         
         #st.warning(MayConv('Ningún archivo de explotación* disponible.').all_mayus(mayus=mayus_))
         
-        if st.sidebar.button(MayConv('Nueva explotación*').all_mayus(mayus=mayus_)):
+        if st.button(MayConv('Nueva explotación*').all_mayus(mayus=mayus_)):
             file_data = {}
             st.session_state.file_data = {}
             st.session_state.loaded_data = True
