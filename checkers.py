@@ -39,7 +39,7 @@ class PAC_checker():
                 crop_surface = crops[crop] + float(surface)
             
             crops.update({crop:crop_surface})
-        
+
         total_surface = sum(crops.values())
         
         crops_percents = {}
@@ -53,15 +53,28 @@ class PAC_checker():
         
         wrong_crop_series_fields = []
 
+        
         for fields in self.data.values:
             
             field = fields[0]
             
-            past_crops = [crop.replace('[', '').replace(']', '').replace("'", '') for crop in list(set(fields[2:-1]))]
-            actual_crop = fields[-1]
-
             
-            if (len(past_crops) == 1) and (past_crops[0] == actual_crop):
+            #past_crops_ = [crop.replace('[', '').replace(']', '').replace("'", '') for crop in list(set(fields[2:-1]))]
+            past_crops = {}
+            past_crops_lists = [eval(year) for year in fields[2:-1]]
+            past_crops_list = []
+            [past_crops_list.extend(year) for year in past_crops_lists]
+            all_crops = set(past_crops_list)
+            [past_crops.update({crop:0}) for crop in all_crops]
+            
+            for year in past_crops_lists:
+                for crop in year:
+                    past_crops[crop] += 1
+
+
+            actual_crop = fields[-1]
+            
+            if any([value >= 3 for value in past_crops.values()]) and (actual_crop in past_crops.keys()):
                 wrong_crop_series_fields.append(field)
 
                 
@@ -129,7 +142,6 @@ class PAC_2023_2027(PAC_checker):
         crops_sorted_dict = {}
         [crops_sorted_dict.update({crop:surface }) for (crop, surface) in crops_sorted[::-1]]
 
-        
         # N crops >= 3
         if len(crops_sorted) < 3:
             return 3

@@ -17,23 +17,6 @@ def traduce_booleans(bool_):
 
 
 
-def season_pie_chart(crop_surfaces):
-    
-
-    df = pd.DataFrame()
-    df['SUPERFICIE'] = list(crop_surfaces.values())
-    df['CULTIVO'] = list(crop_surfaces.keys())
-
-
-    fig = go.Figure(data=[go.Pie(labels=df['CULTIVO'], values=df['SUPERFICIE'],
-                                textinfo='percent',
-                                insidetextorientation='radial'
-                                )])
-    fig.update_layout(width=300 , height=300)
-    
-    return fig , df.sort_values('SUPERFICIE' , ascending=False)
-
-
 def merge_by_field(subfields_df):
     
     fields = set([subfield_name.split('_')[0] for subfield_name in subfields_df['Parcela']])

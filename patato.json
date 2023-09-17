@@ -1,0 +1,126 @@
+{
+     "parcela 1": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 12,
+               "poligono": 23
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 3.34,
+          "temporadas": {
+               "2000": {
+                    "Ajo": "3.34"
+               },
+               "2001": {
+                    "Ajo": "3.34"
+               },
+               "2002": {
+                    "Ajo": "3.34"
+               },
+               "2003": {
+                    "Colza": "3.34"
+               }
+          }
+     },
+     "parcela 2": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 13,
+               "poligono": 23
+          },
+          "pozo": true,
+          "renta": false,
+          "superficie": 4.5,
+          "temporadas": {
+               "2000": {
+                    "Ajo": "4.5"
+               },
+               "2001": {
+                    "Centeno": "4.5"
+               },
+               "2002": {
+                    "Barbecho semillado": "4.5"
+               },
+               "2003": {
+                    "Barbecho": "4.5"
+               }
+          }
+     },
+     "parcela 3": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 24,
+               "poligono": 14
+          },
+          "pozo": false,
+          "renta": true,
+          "superficie": 10.34,
+          "temporadas": {
+               "2000": {
+                    "Ajo": "5.34",
+                    "Garbanzo": "5.0"
+               },
+               "2001": {
+                    "Ajo": "10.34"
+               },
+               "2002": {
+                    "Ajo": "5.0",
+                    "Maiz": "5.34"
+               },
+               "2003": {
+                    "Ajo": "3.0",
+                    "Centeno": "5.34",
+                    "Girasol": "2.0"
+               }
+          }
+     },
+     "parcela 4": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 17,
+               "poligono": 19
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 2.34,
+          "temporadas": {
+               "2000": {
+                    "Ajo": "2.34"
+               },
+               "2001": {
+                    "Guisante": "2.34"
+               },
+               "2002": {
+                    "Girasol": "2.34"
+               },
+               "2003": {
+                    "Guisante": "2.34"
+               }
+          }
+     },
+     "parcela 5": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 19,
+               "poligono": 19
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 3.45,
+          "temporadas": {
+               "2000": {
+                    "Ajo": "3.45"
+               },
+               "2001": {
+                    "Maiz": "3.45"
+               },
+               "2002": {
+                    "Garbanzo": "3.45"
+               },
+               "2003": {
+                    "Patata": "3.45"
+               }
+          }
+     }
+}

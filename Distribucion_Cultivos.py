@@ -9,31 +9,36 @@ import displaing_explotitaion as de
 import new_season as ns
 
 from functions import MayConv, merge_by_field
+from welcome_texts import welcome_message
 
 
 
 # Setting mayus letters
-
 def set_mayus_letters():
     '''Sets the session state for the mayus letters in texts, using a checkbox as reference.\nReturns nothing.'''
     
     mayus_ = st.sidebar.checkbox('MAYUSCULAS')
     
     st.session_state.mayus_ = mayus_
-    
-    
+     
 set_mayus_letters()
 mayus_ = st.session_state.mayus_
 
 
 # MAIN MENU
 menu = st.sidebar.selectbox(MayConv('Menu pricipal').all_mayus(mayus=mayus_),
-                            (MayConv('Nueva parcela').all_mayus(mayus=mayus_),
+                            (MayConv('Inicio').all_mayus(mayus=mayus_),
+                             MayConv('Nueva parcela').all_mayus(mayus=mayus_),
                              MayConv('Eliminar parcela').all_mayus(mayus=mayus_),
                              MayConv('Nueva temporada').all_mayus(mayus=mayus_),
                              MayConv('Visualizar explotación').all_mayus(mayus=mayus_),
                              MayConv('Tareas').all_mayus(mayus=mayus_)))
 
+if menu.lower() == 'inicio':
+    
+    st.title('Control de cultivos')
+    welcome_message(mayus_=mayus_)
+    
 
 # Read previous data (loaded data)
 file_data, file_name = nf.read_previous_data()
@@ -41,7 +46,7 @@ file_data, file_name = nf.read_previous_data()
 
 # Launching if data is loaded
 if st.session_state.loaded_data:
-    
+        
 # ADD NEW FIELD
     if menu.lower() == 'nueva parcela':
         
@@ -73,19 +78,19 @@ if st.session_state.loaded_data:
         
         show = st.selectbox('Mostrar en tabla', ('Cultivo', 'Superficie'))
         
-        field_divisions = ns.set_field_divisions(file_data, show)
+        field_divisions, last_years = ns.set_field_divisions(file_data, show)
         
         if field_divisions is not None:
             st.subheader(MayConv('Selección de cultivo').all_mayus(mayus=mayus_))
             
             
-            new_crops_df = ns.set_crops(field_divisions)
+            new_crops_df = ns.set_crops(field_divisions, last_years)
             
             # función de checkeo de condiciones PAC
 
             check_ = ns.checker(new_crops_df)
             merged_fields = merge_by_field(new_crops_df)
-            
+
 
             bypass, replace, not_assigned = ns.check_for_bypasses(new_crops_df, year, file_data, check_)
             
@@ -105,7 +110,7 @@ if st.session_state.loaded_data:
     elif menu.lower() == 'tareas':
         
         st.write('- limpiar muestra de cultivos años anteriores en tablas (tambien cuando None)')
-        st.write('- textos de ayuda (presentacion y boton popup en sidebar)')
+        st.write('- textos de ayuda (boton popup en sidebar)')
         st.write('- revisar todas las strings para incluirlas en "MayConv" -- a lo mejor puede cambiarse a una lambda')
         st.write('- interacción con todas las tablas y guardado directo (previa alerta y confirmación)')
         
@@ -115,8 +120,8 @@ if st.session_state.loaded_data:
         
     
 # FILE DOWNLOAD
-if (file_name is not None) and (file_data is not None): 
-    file_data_json = json.dumps(file_data)
+if (file_name is not None) and (file_data is not None) and (file_name != ''): 
+    file_data_json = json.dumps(file_data, indent=5, sort_keys=True)
     st.sidebar.download_button(label=MayConv('Descargar datos').all_mayus(mayus=mayus_),
                        data=file_data_json,
                        file_name=file_name+'.json',

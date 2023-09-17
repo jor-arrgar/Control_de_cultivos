@@ -60,8 +60,8 @@ def set_field_divisions(file_data, show):
             for year in range(3):
                 try:
                     last_years[year]
-                except KeyError:
-                    last_years = [None] + last_years
+                except IndexError:
+                    last_years = [f'Sin establecer {year+1}'] + last_years
             
             last_year_crop = list(last_seasons.values())[-1]
             if n_seasons > 1:
@@ -86,14 +86,14 @@ def set_field_divisions(file_data, show):
             
         else:
             new_file_data_lists.append([field, info['superficie'], None, None, None, info['superficie']])
-            
+            last_years = ['Sin establecer 1', 'Sin establecer 2', 'Sin establecer 3']
         last_seasons_list = last_seasons.keys()   
 
         
         
     new_file_data_array = np.array(new_file_data_lists)
     
-    print(last_years)
+    
     new_file_data_df = pd.DataFrame(new_file_data_array, columns=['Parcela', 'Superficie',
                                                                   str(last_years[0]), str(last_years[1]), str(last_years[2]),
                                                                   'Dividir'])  
@@ -107,12 +107,15 @@ def set_field_divisions(file_data, show):
     gd.configure_default_column(groupable=True)
     gd.configure_column('Parcela', editable=False)
     gd.configure_column('Superficie', editable=False)
+    gd.configure_column(str(last_years[0]), editable=False)
+    gd.configure_column(str(last_years[1]), editable=False)
+    gd.configure_column(str(last_years[2]), editable=False)
     
     gd.configure_column('Dividir', editable=True, cellDataType='text')
     
     gridOptions = gd.build()
     
-    
+
     grid_table = AgGrid(new_file_data_df,
                         gridOptions=gridOptions,
                         fit_columns_on_grid_load=True,
@@ -129,12 +132,12 @@ def set_field_divisions(file_data, show):
     # CHECKING FOR DIVISION COLUMN VALUES INTEGRITY
 
     new_df = grid_table['data']
-    
+    new_df = new_df[['Parcela', 'Superficie', str(last_years[0]), str(last_years[1]), str(last_years[2]), 'Dividir']]
+
     new_fields_list = []
-    
-    print(new_df)
+
     correct = True
-    for  year_3, year_2, year_1,field, surface, divide in new_df.values:
+    for  field, surface, year_3, year_2, year_1, divide in new_df.values:
         
         divisions = divide.replace(' ', '').split(',')
         
@@ -156,7 +159,6 @@ def set_field_divisions(file_data, show):
                     
                 new_surface = float(div)
                 
-                print([new_subfield_name, new_surface, year_3, year_2, year_1])
                 new_fields_list.append([new_subfield_name, new_surface, year_3, year_2, year_1])
 
     # RETURNING DATA
@@ -164,18 +166,18 @@ def set_field_divisions(file_data, show):
     if correct:
                     
         new_fields_df = pd.DataFrame(np.array(new_fields_list), columns=['Parcela', 'Superficie', str(last_years[0]), str(last_years[1]), str(last_years[2])])
-
-        return new_fields_df
+        
+        return new_fields_df, last_years
     
     else:
         
         st.error(MayConv('Compruebe los valores de división de parcelas. Deben cumplir con la estructura establecida.')\
             .all_mayus(mayus=mayus_))
         
-        return None             
+        return None, None   
                 
 
-def set_crops(field_divisons_df):
+def set_crops(field_divisons_df, last_years):
     
     field_divisons_df['Cultivo'] = None
     
@@ -205,6 +207,8 @@ def set_crops(field_divisons_df):
     
     
     df = grid_table_2['data']
+    
+    df = df[['Parcela', 'Superficie', str(last_years[0]), str(last_years[1]), str(last_years[2]), 'Cultivo']]
     
     return df
             
@@ -255,11 +259,15 @@ def check_for_bypasses(new_crops_df, year, file_data, check_):
         bypass = st.checkbox('Permitir incumplir condiciones')
         
     for parcela in new_crops_df['Parcela']:
+        
+        if 'temporadas' not in file_data[parcela.split('_')[0]].keys():
+            continue
+
         if year in file_data[parcela.split('_')[0]]['temporadas'].keys():
             st.warning('Se va a reemplazar una entrada existente')
             replace = st.checkbox('Remplazar')
             break
-    
+
     if any([crop == 'None' for crop in new_crops_df['Cultivo']]):
         st.warning('Parcelas sin asignar cultivos')
         not_assigned = st.checkbox('Continuar sin asignar')
