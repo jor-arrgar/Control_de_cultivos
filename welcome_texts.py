@@ -115,7 +115,7 @@ def welcome_message(mayus_):
     
     st.subheader(MayConv('Añadir parcela').all_mayus(mayus=mayus_))
     st.write(MayConv(new_field_instructions).all_mayus(mayus=mayus_))
-    st.warning(MayConv(new_field_instructions).all_mayus(mayus=mayus_))
+    st.warning(MayConv(new_fields_warning).all_mayus(mayus=mayus_))
     
     st.subheader(MayConv('Eliminar parcela').all_mayus(mayus=mayus_))
     st.write(MayConv(delete_field_instructions).all_mayus(mayus=mayus_))
