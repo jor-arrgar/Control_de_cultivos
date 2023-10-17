@@ -1,5 +1,8 @@
 from functions import MayConv
 import streamlit as st
+from streamlit_modal import Modal
+from time import sleep
+
 
 welcome_description = '''"Control de cultivos" es una aplicación web para la visualización y control del reparto de \
 cultivos en una explotación agraria a lo largo de diferentes temporadas.\n
@@ -129,4 +132,74 @@ def welcome_message(mayus_):
     st.header(MayConv('Visualización').all_mayus(mayus=mayus_))
     st.write(MayConv(visualization_structions).all_mayus(mayus=mayus_))
     
+
+
+def help_messages(section, c, mayus_):
+            
+    def help_message():
+        modal = Modal(key="Demo Key 2",title="Ayuda", padding=10, max_width=600)
+        with modal.container():
+
+            if section.lower() == 'inicio':
+                pass 
+            
+            elif section.lower() == 'nueva parcela':
+                
+                st.header(MayConv('Instruccines de uso').all_mayus(mayus=mayus_))
+                st.write(MayConv(introduction).all_mayus(mayus=mayus_))
+                
+                st.subheader(MayConv('Añadir parcela').all_mayus(mayus=mayus_))
+                st.write(MayConv(new_field_instructions).all_mayus(mayus=mayus_))
+                st.warning(MayConv(new_fields_warning).all_mayus(mayus=mayus_))
+                
+            elif section.lower() == 'eliminar parcela':
+                
+                st.header(MayConv('instruccines de uso').all_mayus(mayus=mayus_))
+                st.write(MayConv(introduction).all_mayus(mayus=mayus_))  
+                
+                st.subheader(MayConv('eliminar parcela').all_mayus(mayus=mayus_))
+                st.write(MayConv(delete_field_instructions).all_mayus(mayus=mayus_))             
+                
+            elif section.lower() == 'nueva temporada':
+                
+                st.header(MayConv('instruccines de uso').all_mayus(mayus=mayus_))
+                st.write(MayConv(introduction).all_mayus(mayus=mayus_)) 
+                
+                st.subheader(MayConv('Nueva temporada').all_mayus(mayus=mayus_))
+                
+                selector = {MayConv('Divir parcelas').all_mayus(mayus=mayus_):(MayConv(dividing_instructions).all_mayus(mayus=mayus_),
+                                                                               MayConv(dividing_warning).all_mayus(mayus=mayus_)),
+                            MayConv('Seleccionar cultivos').all_mayus(mayus=mayus_):(MayConv(new_crops_instructions).all_mayus(mayus=mayus_),
+                                                                                     MayConv(new_crops_warning).all_mayus(mayus=mayus_)),}
+                
+                selection = st.selectbox('Sección', selector.keys())
+                
+                st.write(selector[selection][0])
+                st.warning(selector[selection][1])
+                
+                
+                
+                return modal
+                
+            elif section.lower() == 'visualizar explotación':
+                
+                st.header(MayConv('instruccines de uso').all_mayus(mayus=mayus_))
+                st.write(MayConv(introduction).all_mayus(mayus=mayus_)) 
+                
+                st.header(MayConv('Visualización').all_mayus(mayus=mayus_))
+                st.write(MayConv(visualization_structions).all_mayus(mayus=mayus_))
     
+                 
+        return c.button('Ayuda', on_click=help_message)
+    
+    if c.button('Ayuda'):
+
+        if section.lower() == 'nueva temporada':   
+            return help_message()
+        
+        else:
+            help_message()
+                
+        
+        
+        

@@ -113,7 +113,10 @@ def set_field_divisions(file_data, show):
     
     gd.configure_column('Dividir', editable=True, cellDataType='text')
     
+    gd.configure_auto_height()
+    
     gridOptions = gd.build()
+    
     
 
     grid_table = AgGrid(new_file_data_df,
@@ -190,6 +193,7 @@ def set_crops(field_divisons_df, last_years):
 
     gd_2.configure_column('Cultivo', editable=True, cellEditor='agSelectCellEditor', cellEditorParams={'values': crop_list })
 
+    gd_2.configure_auto_height()
     
     gridOptions = gd_2.build()
     

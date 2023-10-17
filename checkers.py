@@ -62,12 +62,16 @@ class PAC_checker():
             #past_crops_ = [crop.replace('[', '').replace(']', '').replace("'", '') for crop in list(set(fields[2:-1]))]
             past_crops = {}
             past_crops_lists = [eval(year) for year in fields[2:-1]]
+
             past_crops_list = []
-            [past_crops_list.extend(year) for year in past_crops_lists]
+            
+            [past_crops_list.extend(year) for year in past_crops_lists if year is not None]
             all_crops = set(past_crops_list)
             [past_crops.update({crop:0}) for crop in all_crops]
             
             for year in past_crops_lists:
+                if year is None:
+                    continue
                 for crop in year:
                     past_crops[crop] += 1
 

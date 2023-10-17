@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.graph_objects as go
 import pandas as pd
+import numpy as np
 
 from functions import MayConv
 from new_field import display_all_fields
@@ -72,18 +73,171 @@ def surface_by_poligono(fields_dataframe,  town_column, poligono_column, rent_co
     st.plotly_chart(fig_2)
     
 
+def display_all_field_crops(file_data):
+    
+    crop_data = []
+    for field, info in file_data.items():
+        
+        if 'temporadas' in info.keys():
+            years = info['temporadas'].keys()
+            
+            crops_and_surfaces = [info['temporadas'][year] for year in years]
+
+            for year_dict, year in zip(crops_and_surfaces, years):
+                
+                for crop, surface in year_dict.items():
+                    
+                    crop_data.append([field, crop, surface, year])
+            
+        else:
+            crop_data.append([field, None, None, None])
+
+
+    crop_df = pd.DataFrame(np.array(crop_data), columns=['Parcela', 'Cultivo', 'Superficie', 'Año'])
+    
+    crop_df['Superficie'] = crop_df['Superficie'].astype('float16')
+    
+    return crop_df
+        
+            
+
+
+    
+
 def fields_distributions(file_data):
     mayus_ = st.session_state.mayus_
     
     
     fields_dataframe = display_all_fields(file_data, display=False)
     
-    #merged_surface_by_town = pd.group_by(fields_dataframe)[MayConv('Municipio').all_mayus(mayus=mayus_)].sum()
-    town_column = MayConv('Municipio').all_mayus(mayus=mayus_)
-    surface_column = MayConv('Superficie').all_mayus(mayus=mayus_)
-    poligono_column = MayConv('Polígono').all_mayus(mayus=mayus_)
-    rent_column = MayConv('Renta').all_mayus(mayus=mayus_)
-    fields_dataframe[surface_column] = fields_dataframe[surface_column].astype('float')
+    if fields_dataframe is not None:
+        #merged_surface_by_town = pd.group_by(fields_dataframe)[MayConv('Municipio').all_mayus(mayus=mayus_)].sum()
+        town_column = MayConv('Municipio').all_mayus(mayus=mayus_)
+        surface_column = MayConv('Superficie').all_mayus(mayus=mayus_)
+        poligono_column = MayConv('Polígono').all_mayus(mayus=mayus_)
+        rent_column = MayConv('Renta').all_mayus(mayus=mayus_)
+
+        fields_dataframe[surface_column] = fields_dataframe[surface_column].astype('float')
+
+            
+        
+        surface_by_town(fields_dataframe, town_column, rent_column, surface_column)
+        surface_by_poligono(fields_dataframe, town_column, poligono_column, rent_column, surface_column)
+    else:
+        st.warning('explotacion vacia')
+        
+        
+def display_crops_by_season(crops_df):
     
-    surface_by_town(fields_dataframe, town_column, rent_column, surface_column)
-    surface_by_poligono(fields_dataframe, town_column, poligono_column, rent_column, surface_column)
+    crops_by_season = crops_df.groupby(['Cultivo', 'Año']).sum()
+    
+
+    
+    if st.checkbox('Agrupar cultivos'):
+        groups = st.multiselect('Grupos de cultivos', ('Cereales', 'Leguminosas', 'Tubérculos', 'Mejorantes',
+                                                       'Otras hortalizas', 'Barbecho', 'Añadir individual'))
+        st.write(groups)
+        st.error('Funcionalidad no operativa todavia')
+        df_to_display = None
+           
+    else:
+        df_to_display = crops_df
+    
+    if df_to_display is not None:
+        if len(set(df_to_display['Año'])) > 10:
+            max_ = 10
+        else:
+            max_ = None
+        
+        data = [go.Bar(name=year, x=df_to_display[df_to_display['Año'] == year]['Cultivo'],
+                                y=df_to_display[df_to_display['Año'] == year]['Superficie']) \
+                                    for year in sorted(list(set(df_to_display['Año'])))[:max_]]
+
+        layout = dict(title='Superficie de cultivos por temporada',
+                    xaxis = dict(title='Cultivo'),
+                    yaxis= dict(title='Hectáreas'))
+        
+        fig = go.Figure(data=data, layout=layout)
+        
+        # Change the bar mode
+        fig.update_layout(barmode='group')
+        
+        st.plotly_chart(fig)
+    
+def display_crops_by_field(crops_df):
+    
+    crops_by_field_count = crops_df.groupby(['Parcela', 'Cultivo']).count()
+    
+    if st.checkbox('Agrupar cultivos'):
+        st.error('Funcionalidad no operativa todavia')
+        df_to_display = None
+    else:
+        df_to_display = crops_by_field_count
+        
+    if df_to_display is not None:
+        
+        take_first = lambda x: x[0]    
+        data = [go.Bar(name=field, x=df_to_display.loc[field].index,
+                                y=df_to_display.loc[field]['Superficie']) \
+                                    for field in sorted(list(set([take_first(x) for x in df_to_display.index])))]
+
+        layout = dict(title='Superficie de cultivos por parcela',
+                    xaxis = dict(title='Cultivo'),
+                    yaxis= dict(title='Hectáreas'))
+        
+        fig = go.Figure(data=data, layout=layout)
+        
+        # Change the bar mode
+        fig.update_layout(barmode='group')
+        
+        st.plotly_chart(fig)
+    
+def display_crops_by_crops(crops_df):
+
+    crops_by_field_count = crops_df.groupby(['Cultivo', 'Año']).count()
+    crops_by_field_sum = crops_df.groupby(['Cultivo', 'Año']).sum()
+    
+    
+    
+    if st.checkbox('Agrupar cultivos'):
+        st.error('Funcionalidad no operativa todavia')
+        df_to_display = None
+        title = None; y_title = None
+    else:
+        df_to_display = crops_by_field_sum
+        title = 'Superficie'; y_title = 'Hectáreas'
+        if st.checkbox('Número de parcelas'):
+            df_to_display = crops_by_field_count
+            title= 'Parcelas' ; y_title = 'Número de parcelas'
+    
+    if df_to_display is not None:
+        take_first = lambda x: x[0]    
+        data = [go.Bar(name=field, x=df_to_display.loc[field].index,
+                                y=df_to_display.loc[field]['Superficie']) \
+                                    for field in sorted(list(set([take_first(x) for x in df_to_display.index])))]
+
+        layout = dict(title=f'{title} de cultivos por temporada',
+                    xaxis = dict(title='Cultivo'),
+                    yaxis= dict(title=y_title))
+        
+        fig = go.Figure(data=data, layout=layout)
+        
+        # Change the bar mode
+        fig.update_layout(barmode='group')
+        
+        st.plotly_chart(fig)
+    
+    
+    
+def crops_distribution(file_data):
+    mayus_ = st.session_state.mayus_
+    
+    crops_df = display_all_field_crops(file_data)
+    
+    grouping = st.selectbox('Selección interactiva', ('Por temporada', 'Por parcela', 'Por cultivo'))
+    
+    grouping_dict = {'por temporada': display_crops_by_season,
+                     'por parcela': display_crops_by_field,
+                     'por cultivo': display_crops_by_crops}
+    
+    grouping_dict[grouping.lower()](crops_df)

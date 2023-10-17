@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import json
+from time import sleep
 
 import new_field as nf
 import delete_field as delf
@@ -9,19 +10,22 @@ import displaing_explotitaion as de
 import new_season as ns
 
 from functions import MayConv, merge_by_field
-from welcome_texts import welcome_message
+from welcome_texts import welcome_message, help_messages
 
 
 
 # Setting mayus letters
-def set_mayus_letters():
+def set_mayus_letters(c):
     '''Sets the session state for the mayus letters in texts, using a checkbox as reference.\nReturns nothing.'''
     
-    mayus_ = st.sidebar.checkbox('MAYUSCULAS')
+    mayus_ = c.checkbox('MAYUSCULAS')
     
     st.session_state.mayus_ = mayus_
-     
-set_mayus_letters()
+
+
+
+c1, c2 = st.sidebar.columns(2)
+set_mayus_letters(c1)
 mayus_ = st.session_state.mayus_
 
 
@@ -49,6 +53,7 @@ if st.session_state.loaded_data:
         
 # ADD NEW FIELD
     if menu.lower() == 'nueva parcela':
+        help_messages(menu, c2, mayus_=mayus_)
         
         new_field = nf.new_field()
 
@@ -64,53 +69,68 @@ if st.session_state.loaded_data:
     
 # REMOVE FIELD
     elif menu.lower() == 'eliminar parcela':
+        help_messages(menu, c2, mayus_=mayus_)
         
         file_data_, removed = delf.delete_field(file_data)
     
 # START NEW SEASON
     elif menu.lower() == 'nueva temporada':
+        modal = help_messages(menu, c2, mayus_=mayus_)
+
 
         st.title(MayConv('Nueva temporada').all_mayus(mayus=mayus_))
-        
+                
         year = st.number_input('Año', 2000)
         #ns.display_data(file_data)
         st.subheader(MayConv('División de parcelas').all_mayus(mayus=mayus_))
         
         show = st.selectbox('Mostrar en tabla', ('Cultivo', 'Superficie'))
         
-        field_divisions, last_years = ns.set_field_divisions(file_data, show)
-        
-        if field_divisions is not None:
-            st.subheader(MayConv('Selección de cultivo').all_mayus(mayus=mayus_))
+        if modal is None:
+            field_divisions, last_years = ns.set_field_divisions(file_data, show)
             
-            
-            new_crops_df = ns.set_crops(field_divisions, last_years)
-            
-            # función de checkeo de condiciones PAC
-
-            check_ = ns.checker(new_crops_df)
-            merged_fields = merge_by_field(new_crops_df)
-
-
-            bypass, replace, not_assigned = ns.check_for_bypasses(new_crops_df, year, file_data, check_)
-            
-            if bypass and replace and not_assigned and st.button('Update'):
+            if field_divisions is not None:
+                st.subheader(MayConv('Selección de cultivo').all_mayus(mayus=mayus_))
                 
-                file_data_ = ns.add_new_season(file_data, merged_fields, year)
+                
+                new_crops_df = ns.set_crops(field_divisions, last_years)
+                
+                # función de checkeo de condiciones PAC
 
-                st.session_state.file_data = file_data_
-                st.experimental_rerun()
+                check_ = ns.checker(new_crops_df)
+                merged_fields = merge_by_field(new_crops_df)
 
+
+                bypass, replace, not_assigned = ns.check_for_bypasses(new_crops_df, year, file_data, check_)
+                
+                if bypass and replace and not_assigned and st.button('Update'):
+                    
+                    file_data_ = ns.add_new_season(file_data, merged_fields, year)
+
+                    st.session_state.file_data = file_data_
+                    st.experimental_rerun()
+                
+        
     
 # DATA VISUALIZATION
     elif menu.lower() == 'visualizar explotación':
+        help_messages(menu, c2, mayus_=mayus_)
         
-        de.fields_distributions(file_data)
+        tab_names = [MayConv(text).all_mayus(mayus=mayus_) for text in ['Parcelas catastrales',
+                                                                        'Cultivos por temporada']]
+        
+        tab1, tab2 = st.tabs(tab_names)
+        
+        with tab1:
+            de.fields_distributions(file_data)
+            
+        with tab2:
+            de.crops_distribution(file_data)
+
         
     elif menu.lower() == 'tareas':
         
         st.write('- limpiar muestra de cultivos años anteriores en tablas (tambien cuando None)')
-        st.write('- textos de ayuda (boton popup en sidebar)')
         st.write('- revisar todas las strings para incluirlas en "MayConv" -- a lo mejor puede cambiarse a una lambda')
         st.write('- interacción con todas las tablas y guardado directo (previa alerta y confirmación)')
         
