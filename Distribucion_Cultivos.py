@@ -103,6 +103,7 @@ if st.session_state.loaded_data:
 
                 bypass, replace, not_assigned = ns.check_for_bypasses(new_crops_df, year, file_data, check_)
                 
+                
                 if bypass and replace and not_assigned and st.button('Update'):
                     
                     file_data_ = ns.add_new_season(file_data, merged_fields, year)
@@ -141,6 +142,25 @@ if st.session_state.loaded_data:
     
 # FILE DOWNLOAD
 if (file_name is not None) and (file_data is not None) and (file_name != ''): 
+    
+    # Check for incorrect crops
+    for field, data in file_data.items():
+        for season, crop_surface in data['temporadas'].items():
+            for crop, surface in tuple(crop_surface.items()):
+                if crop == '':
+                    file_data[field]['temporadas'][season].pop(crop, None)
+                    
+                    file_data[field]['temporadas'][season][None] = surface
+
+    # Check for all season keys as integers
+    for field, data in file_data.items():
+        for season, crop_surface in tuple(data['temporadas'].items()):
+            if type(season) == str:
+                file_data[field]['temporadas'].pop(season, None)
+                
+                file_data[field]['temporadas'][int(season)] = crop_surface
+
+
     file_data_json = json.dumps(file_data, indent=5, sort_keys=True)
     st.sidebar.download_button(label=MayConv('Descargar datos').all_mayus(mayus=mayus_),
                        data=file_data_json,

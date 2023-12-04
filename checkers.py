@@ -47,6 +47,8 @@ class PAC_checker():
         
         self.crops = crops
         self.crops_percents = crops_percents
+        self.total_surface = round(total_surface, 2)
+        
         
         
     def _crop_time_series(self):
@@ -111,6 +113,7 @@ class PAC_checker():
         
         return self.crops, self.crops_percents, self.wrong_crop_series
     
+    
                       
 
 
@@ -120,6 +123,8 @@ class PAC_2023_2027(PAC_checker):
         
         self.not_allowed_time_series = [1,1,1]
         super().__init__(fields_dataframe)
+        self.barbecho_surface = round(self.total_surface * 0.04, 2)
+        self.ecoschemas = {}
         
         
         
@@ -165,7 +170,8 @@ class PAC_2023_2027(PAC_checker):
         
         
         # All test passed
-        return 0
+        return 0        
+        
     
     @staticmethod
     def translate_error(error):

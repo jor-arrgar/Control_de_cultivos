@@ -12,7 +12,7 @@ from st_aggrid.grid_options_builder import GridOptionsBuilder
 
 
 crop_list = ['Ajo', 'Barbecho', 'Barbecho semillado', 'Cebada', 'Centeno', 'Colza', 'Garbanzo', 'Girasol',
-             'Guisante', 'Lenteja' , 'Maiz', 'Patata', 'Remolacha', 'Trigo', 'Triticale', '']
+             'Guisante', 'Lenteja' , 'Maiz', 'Patata', 'Remolacha', 'Trigo', 'Triticale', None]
 
 up_crops = ['Colza' , 'Garbanzo' , 'Girasol' , 'Guisante' , 'Lenteja']
 leguminous_crops = ['Garbanzo' , 'Guisante' , 'Lenteja']
@@ -74,7 +74,7 @@ def set_field_divisions(file_data, show):
                 prev__prev_last_year_crop = None
                 prev_last_year_crop = None
             
-            selection = lambda x: list(x.keys()) if show is 'Cultivo' else list(x.values()) 
+            selection = lambda x: list(x.keys()) if show == 'Cultivo' else list(x.values()) 
             filter_ = lambda x: selection(x) if x is not None else None
             
             new_file_data_lists.append([field,
@@ -93,11 +93,9 @@ def set_field_divisions(file_data, show):
         
     new_file_data_array = np.array(new_file_data_lists)
     
-    
     new_file_data_df = pd.DataFrame(new_file_data_array, columns=['Parcela', 'Superficie',
-                                                                  str(last_years[0]), str(last_years[1]), str(last_years[2]),
+                                                                  str(last_years[-3]), str(last_years[-2]), str(last_years[-1]),
                                                                   'Dividir'])  
-    
     
     # MOUNTING AG GRID WITH DIVISIONS COLUMN EDITABLE TO SET THE NUMBER OF DIVISIONS IN THE FIELD
     
@@ -107,9 +105,9 @@ def set_field_divisions(file_data, show):
     gd.configure_default_column(groupable=True)
     gd.configure_column('Parcela', editable=False)
     gd.configure_column('Superficie', editable=False)
-    gd.configure_column(str(last_years[0]), editable=False)
-    gd.configure_column(str(last_years[1]), editable=False)
-    gd.configure_column(str(last_years[2]), editable=False)
+    gd.configure_column(str(last_years[-3]), editable=False)
+    gd.configure_column(str(last_years[-2]), editable=False)
+    gd.configure_column(str(last_years[-1]), editable=False)
     
     gd.configure_column('Dividir', editable=True, cellDataType='text')
     
@@ -135,7 +133,8 @@ def set_field_divisions(file_data, show):
     # CHECKING FOR DIVISION COLUMN VALUES INTEGRITY
 
     new_df = grid_table['data']
-    new_df = new_df[['Parcela', 'Superficie', str(last_years[0]), str(last_years[1]), str(last_years[2]), 'Dividir']]
+    
+    new_df = new_df[['Parcela', 'Superficie', str(last_years[-3]), str(last_years[-2]), str(last_years[-1]), 'Dividir']]
 
     new_fields_list = []
 
@@ -156,7 +155,14 @@ def set_field_divisions(file_data, show):
             if correct:
                 
                 if len(divisions) > 1:
-                    new_subfield_name = f'{field}_{pos+1}'
+                
+                    if pos > 27:
+                        letter_pos = pos % 27 + 1
+                    else:
+                        letter_pos = pos + 1
+                    
+                    new_subfield_name = f'{field}-{chr(letter_pos+96)}'
+
                 else:
                     new_subfield_name = field
                     
@@ -168,7 +174,7 @@ def set_field_divisions(file_data, show):
     
     if correct:
                     
-        new_fields_df = pd.DataFrame(np.array(new_fields_list), columns=['Parcela', 'Superficie', str(last_years[0]), str(last_years[1]), str(last_years[2])])
+        new_fields_df = pd.DataFrame(np.array(new_fields_list), columns=['Parcela', 'Superficie', str(last_years[-3]), str(last_years[-2]), str(last_years[-1])])
         
         return new_fields_df, last_years
     
@@ -197,7 +203,7 @@ def set_crops(field_divisons_df, last_years):
     
     gridOptions = gd_2.build()
     
-    
+
     grid_table_2 = AgGrid(field_divisons_df,
                         gridOptions=gridOptions,
                         fit_columns_on_grid_load=True,
@@ -211,8 +217,8 @@ def set_crops(field_divisons_df, last_years):
     
     
     df = grid_table_2['data']
-    
-    df = df[['Parcela', 'Superficie', str(last_years[0]), str(last_years[1]), str(last_years[2]), 'Cultivo']]
+
+    df = df[['Parcela', 'Superficie', str(last_years[-3]), str(last_years[-2]), str(last_years[-1]), 'Cultivo']]
     
     return df
             
@@ -242,6 +248,8 @@ def checker(fields_df):
     
     error_message = PAC_2023_2027.translate_error(pac_check)
     
+    st.sidebar.write('Hc totales: ', checker_.total_surface)
+    st.sidebar.write('Hc barbecho minimo: ', checker_.barbecho_surface)
     plot_crop_percents(checker_.crops_percents)
 
     if pac_check == 0:
@@ -263,11 +271,12 @@ def check_for_bypasses(new_crops_df, year, file_data, check_):
         bypass = st.checkbox('Permitir incumplir condiciones')
         
     for parcela in new_crops_df['Parcela']:
-        
-        if 'temporadas' not in file_data[parcela.split('_')[0]].keys():
+
+            
+        if 'temporadas' not in file_data[parcela.split('-')[0]].keys():
             continue
 
-        if year in file_data[parcela.split('_')[0]]['temporadas'].keys():
+        if year in file_data[parcela.split('-')[0]]['temporadas'].keys():
             st.warning('Se va a reemplazar una entrada existente')
             replace = st.checkbox('Remplazar')
             break
@@ -285,6 +294,10 @@ def add_new_season(file_data, merged_fields, year):
     for field in merged_fields.keys():
         if 'temporadas' not in list(new_file_data[field].keys()):
             new_file_data[field].update({'temporadas':{}})
+            
+        if year in new_file_data[field]['temporadas'].keys():
+            new_file_data[field]['temporadas'].pop(year, None)
+            
         new_file_data[field]['temporadas'].update({year:merged_fields[field]})
         
     return new_file_data
