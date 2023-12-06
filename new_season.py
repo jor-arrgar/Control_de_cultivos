@@ -9,6 +9,7 @@ from new_field import read_previous_data
 
 from st_aggrid import AgGrid, GridUpdateMode, JsCode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
+from streamlit_modal import Modal
 
 
 crop_list = ['Ajo', 'Barbecho', 'Barbecho semillado', 'Cebada', 'Centeno', 'Colza', 'Garbanzo', 'Girasol',
@@ -36,6 +37,19 @@ def check_for_past_seasons(field_info):
         return field_info['temporadas']
     
     return {}
+
+
+def display_fields_pop_up(file_data):
+    
+    modal = Modal(key="Datos catastrales",title="Datos catastrales", padding=10, max_width=600)
+    with modal.container():
+        
+        st.write(" | ".join(['Nombre de parcela', 'Municipio', 'Poligono', 'Parcela']))
+        for field, data in file_data.items():
+            location = data['localizacion']
+            st.write(field, "|", location['municipio'][:3], ',', location['poligono'], ' ', location['parcela'])
+        
+        
     
 
 def set_field_divisions(file_data, show):

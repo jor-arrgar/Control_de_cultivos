@@ -77,7 +77,6 @@ if st.session_state.loaded_data:
     elif menu.lower() == 'nueva temporada':
         modal = help_messages(menu, c2, mayus_=mayus_)
 
-
         st.title(MayConv('Nueva temporada').all_mayus(mayus=mayus_))
                 
         year = st.number_input('Año', 2000)
@@ -103,7 +102,9 @@ if st.session_state.loaded_data:
 
                 bypass, replace, not_assigned = ns.check_for_bypasses(new_crops_df, year, file_data, check_)
                 
-                
+                if st.sidebar.button('Relacion catastral'):
+                    ns.display_fields_pop_up(file_data)
+                    
                 if bypass and replace and not_assigned and st.button('Update'):
                     
                     file_data_ = ns.add_new_season(file_data, merged_fields, year)

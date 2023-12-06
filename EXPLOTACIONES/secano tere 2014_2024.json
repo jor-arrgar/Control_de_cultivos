@@ -1,0 +1,1264 @@
+{
+     "apisquillos": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 3018,
+               "poligono": 5
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.45,
+          "temporadas": {
+               "2014": {
+                    "Barbecho": "0.45"
+               },
+               "2015": {
+                    "Barbecho": "0.45"
+               },
+               "2016": {
+                    "Barbecho": "0.45"
+               },
+               "2017": {
+                    "Cebada": "0.45"
+               },
+               "2018": {
+                    "Barbecho": "0.45"
+               },
+               "2019": {
+                    "Barbecho": "0.45"
+               },
+               "2020": {
+                    "Cebada": "0.45"
+               },
+               "2021": {
+                    "Barbecho": "0.45"
+               },
+               "2022": {
+                    "Barbecho": "0.45"
+               },
+               "2023": {
+                    "Barbecho semillado": "0.45"
+               },
+               "2024": {
+                    "None": "0.45"
+               }
+          }
+     },
+     "bahabon_1": {
+          "localizacion": {
+               "municipio": "cogeces del monte",
+               "parcela": 63,
+               "poligono": 1
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 2.67,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "2.67"
+               },
+               "2015": {
+                    "Cebada": "2.67"
+               },
+               "2016": {
+                    "Cebada": "2.67"
+               },
+               "2017": {
+                    "Trigo": "2.67"
+               },
+               "2018": {
+                    "Barbecho": "2.67"
+               },
+               "2019": {
+                    "Trigo": "2.67"
+               },
+               "2020": {
+                    "Cebada": "2.67"
+               },
+               "2021": {
+                    "Trigo": "2.67"
+               },
+               "2022": {
+                    "Cebada": "2.67"
+               },
+               "2023": {
+                    "Guisante": "2.67"
+               },
+               "2024": {
+                    "Trigo": "2.67"
+               }
+          }
+     },
+     "bahabon_2": {
+          "localizacion": {
+               "municipio": "cogeces del monte",
+               "parcela": 64,
+               "poligono": 1
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.6,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.6"
+               },
+               "2015": {
+                    "Cebada": "0.6"
+               },
+               "2016": {
+                    "Cebada": "0.6"
+               },
+               "2017": {
+                    "Trigo": "0.6"
+               },
+               "2018": {
+                    "Barbecho": "0.6"
+               },
+               "2019": {
+                    "Trigo": "0.6"
+               },
+               "2020": {
+                    "Cebada": "0.6"
+               },
+               "2021": {
+                    "Trigo": "0.6"
+               },
+               "2022": {
+                    "Cebada": "0.6"
+               },
+               "2023": {
+                    "Guisante": "0.6"
+               },
+               "2024": {
+                    "Trigo": "0.6"
+               }
+          }
+     },
+     "crucillas_1": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 43,
+               "poligono": 1
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 2.04,
+          "temporadas": {
+               "2014": {
+                    "Ajo": "2.04"
+               },
+               "2015": {
+                    "Trigo": "2.04"
+               },
+               "2016": {
+                    "Cebada": "2.04"
+               },
+               "2017": {
+                    "Cebada": "2.04"
+               },
+               "2018": {
+                    "Cebada": "2.04"
+               },
+               "2019": {
+                    "Cebada": "2.04"
+               },
+               "2020": {
+                    "Cebada": "2.04"
+               },
+               "2021": {
+                    "Trigo": "2.04"
+               },
+               "2022": {
+                    "Trigo": "2.04"
+               },
+               "2023": {
+                    "Patata": "2.04"
+               },
+               "2024": {
+                    "Trigo": "2.04"
+               }
+          }
+     },
+     "crucillas_2": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 83,
+               "poligono": 1
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 2.075,
+          "temporadas": {
+               "2014": {
+                    "Ajo": "2.075"
+               },
+               "2015": {
+                    "Trigo": "2.075"
+               },
+               "2016": {
+                    "Cebada": "2.075"
+               },
+               "2017": {
+                    "Cebada": "2.075"
+               },
+               "2018": {
+                    "Cebada": "2.075"
+               },
+               "2019": {
+                    "Cebada": "2.075"
+               },
+               "2020": {
+                    "Cebada": "2.075"
+               },
+               "2021": {
+                    "Trigo": "2.075"
+               },
+               "2022": {
+                    "Trigo": "2.075"
+               },
+               "2023": {
+                    "Patata": "2.075"
+               },
+               "2024": {
+                    "Trigo": "2.075"
+               }
+          }
+     },
+     "crucillas_3": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 84,
+               "poligono": 1
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 2.08,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "2.08"
+               },
+               "2015": {
+                    "Cebada": "2.08"
+               },
+               "2016": {
+                    "Trigo": "2.08"
+               },
+               "2017": {
+                    "Trigo": "2.08"
+               },
+               "2018": {
+                    "Cebada": "2.08"
+               },
+               "2019": {
+                    "Cebada": "2.08"
+               },
+               "2020": {
+                    "Trigo": "2.08"
+               },
+               "2021": {
+                    "Cebada": "2.08"
+               },
+               "2022": {
+                    "Patata": "2.08"
+               },
+               "2023": {
+                    "Cebada": "2.08"
+               },
+               "2024": {
+                    "Trigo": "2.08"
+               }
+          }
+     },
+     "crucillas_4": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 85,
+               "poligono": 1
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 2.1,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "2.1"
+               },
+               "2015": {
+                    "Cebada": "2.1"
+               },
+               "2016": {
+                    "Trigo": "2.1"
+               },
+               "2017": {
+                    "Cebada": "2.1"
+               },
+               "2018": {
+                    "Cebada": "2.1"
+               },
+               "2019": {
+                    "Cebada": "2.1"
+               },
+               "2020": {
+                    "Trigo": "2.1"
+               },
+               "2021": {
+                    "Cebada": "2.1"
+               },
+               "2022": {
+                    "Patata": "2.1"
+               },
+               "2023": {
+                    "Girasol": "0.71",
+                    "Trigo": "1.39"
+               },
+               "2024": {
+                    "Cebada": "2.1"
+               }
+          }
+     },
+     "crucillas_nave_cerdos": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 52,
+               "poligono": 1
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.68,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.68"
+               },
+               "2015": {
+                    "Cebada": "0.68"
+               },
+               "2016": {
+                    "Cebada": "0.68"
+               },
+               "2017": {
+                    "Cebada": "0.68"
+               },
+               "2018": {
+                    "Cebada": "0.68"
+               },
+               "2019": {
+                    "Cebada": "0.68"
+               },
+               "2020": {
+                    "Trigo": "0.68"
+               },
+               "2021": {
+                    "Trigo": "0.68"
+               },
+               "2022": {
+                    "Patata": "0.68"
+               },
+               "2023": {
+                    "Cebada": "0.68"
+               },
+               "2024": {
+                    "None": "0.68"
+               }
+          }
+     },
+     "el briz": {
+          "localizacion": {
+               "municipio": "fompedraza",
+               "parcela": 76,
+               "poligono": 4
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 1.76,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "1.76"
+               },
+               "2015": {
+                    "Cebada": "1.76"
+               },
+               "2016": {
+                    "Trigo": "1.76"
+               },
+               "2017": {
+                    "Cebada": "1.76"
+               },
+               "2018": {
+                    "Trigo": "1.76"
+               },
+               "2019": {
+                    "Cebada": "1.76"
+               },
+               "2020": {
+                    "Trigo": "1.76"
+               },
+               "2021": {
+                    "Cebada": "1.76"
+               },
+               "2022": {
+                    "Cebada": "1.76"
+               },
+               "2023": {
+                    "Trigo": "1.76"
+               },
+               "2024": {
+                    "Cebada": "1.76"
+               }
+          }
+     },
+     "el monte robledillo": {
+          "localizacion": {
+               "municipio": "fompedraza",
+               "parcela": 26,
+               "poligono": 2
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.46,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.46"
+               },
+               "2015": {
+                    "Cebada": "0.46"
+               },
+               "2016": {
+                    "Cebada": "0.46"
+               },
+               "2017": {
+                    "Cebada": "0.46"
+               },
+               "2018": {
+                    "Trigo": "0.46"
+               },
+               "2019": {
+                    "Cebada": "0.46"
+               },
+               "2020": {
+                    "Barbecho": "0.46"
+               },
+               "2021": {
+                    "Cebada": "0.46"
+               },
+               "2022": {
+                    "Cebada": "0.46"
+               },
+               "2023": {
+                    "Trigo": "0.46"
+               },
+               "2024": {
+                    "Cebada": "0.46"
+               }
+          }
+     },
+     "la lancha_1": {
+          "localizacion": {
+               "municipio": "olombrada",
+               "parcela": 5096,
+               "poligono": 23
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.3,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.3"
+               },
+               "2015": {
+                    "Barbecho": "0.3"
+               },
+               "2016": {
+                    "Barbecho": "0.3"
+               },
+               "2017": {
+                    "Cebada": "0.3"
+               },
+               "2018": {
+                    "Barbecho": "0.3"
+               },
+               "2019": {
+                    "Barbecho": "0.3"
+               },
+               "2020": {
+                    "Cebada": "0.3"
+               },
+               "2021": {
+                    "Barbecho": "0.3"
+               },
+               "2022": {
+                    "Barbecho": "0.3"
+               },
+               "2023": {
+                    "Trigo": "0.3"
+               },
+               "2024": {
+                    "Barbecho": "0.3"
+               }
+          }
+     },
+     "la lancha_2": {
+          "localizacion": {
+               "municipio": "olombrada",
+               "parcela": 5027,
+               "poligono": 23
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.29,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.29"
+               },
+               "2015": {
+                    "Barbecho": "0.29"
+               },
+               "2016": {
+                    "Barbecho": "0.29"
+               },
+               "2017": {
+                    "Cebada": "0.29"
+               },
+               "2018": {
+                    "Barbecho": "0.29"
+               },
+               "2019": {
+                    "Barbecho": "0.29"
+               },
+               "2020": {
+                    "Cebada": "0.29"
+               },
+               "2021": {
+                    "Barbecho": "0.29"
+               },
+               "2022": {
+                    "Barbecho": "0.29"
+               },
+               "2023": {
+                    "Trigo": "0.29"
+               },
+               "2024": {
+                    "Barbecho": "0.29"
+               }
+          }
+     },
+     "la lancha_3": {
+          "localizacion": {
+               "municipio": "olombrada",
+               "parcela": 5069,
+               "poligono": 23
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.26,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.26"
+               },
+               "2015": {
+                    "Barbecho": "0.26"
+               },
+               "2016": {
+                    "Barbecho": "0.26"
+               },
+               "2017": {
+                    "Cebada": "0.26"
+               },
+               "2018": {
+                    "Barbecho": "0.26"
+               },
+               "2019": {
+                    "Barbecho": "0.26"
+               },
+               "2020": {
+                    "Cebada": "0.26"
+               },
+               "2021": {
+                    "Barbecho": "0.26"
+               },
+               "2022": {
+                    "Barbecho": "0.26"
+               },
+               "2023": {
+                    "Trigo": "0.26"
+               },
+               "2024": {
+                    "Barbecho": "0.26"
+               }
+          }
+     },
+     "la lancha_4": {
+          "localizacion": {
+               "municipio": "olombrada",
+               "parcela": 5072,
+               "poligono": 23
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.2,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.2"
+               },
+               "2015": {
+                    "Barbecho": "0.2"
+               },
+               "2016": {
+                    "Barbecho": "0.2"
+               },
+               "2017": {
+                    "Cebada": "0.2"
+               },
+               "2018": {
+                    "Barbecho": "0.2"
+               },
+               "2019": {
+                    "Barbecho": "0.2"
+               },
+               "2020": {
+                    "Cebada": "0.2"
+               },
+               "2021": {
+                    "Barbecho": "0.2"
+               },
+               "2022": {
+                    "Barbecho": "0.2"
+               },
+               "2023": {
+                    "Trigo": "0.2"
+               },
+               "2024": {
+                    "Barbecho": "0.2"
+               }
+          }
+     },
+     "langayo_1": {
+          "localizacion": {
+               "municipio": "langayo",
+               "parcela": 71,
+               "poligono": 8
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 1.74,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "1.74"
+               },
+               "2015": {
+                    "Cebada": "1.74"
+               },
+               "2016": {
+                    "Cebada": "1.74"
+               },
+               "2017": {
+                    "Cebada": "1.74"
+               },
+               "2018": {
+                    "Cebada": "1.74"
+               },
+               "2019": {
+                    "Barbecho": "1.74"
+               },
+               "2020": {
+                    "Cebada": "1.74"
+               },
+               "2021": {
+                    "Cebada": "1.74"
+               },
+               "2022": {
+                    "Cebada": "1.74"
+               },
+               "2023": {
+                    "Trigo": "1.74"
+               },
+               "2024": {
+                    "Cebada": "1.74"
+               }
+          }
+     },
+     "langayo_2": {
+          "localizacion": {
+               "municipio": "langayo",
+               "parcela": 72,
+               "poligono": 8
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.52,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.52"
+               },
+               "2015": {
+                    "Barbecho": "0.52"
+               },
+               "2016": {
+                    "Cebada": "0.52"
+               },
+               "2017": {
+                    "Cebada": "0.52"
+               },
+               "2018": {
+                    "Cebada": "0.52"
+               },
+               "2019": {
+                    "Barbecho": "0.52"
+               },
+               "2020": {
+                    "Cebada": "0.52"
+               },
+               "2021": {
+                    "Cebada": "0.52"
+               },
+               "2022": {
+                    "Cebada": "0.52"
+               },
+               "2023": {
+                    "Trigo": "0.52"
+               },
+               "2024": {
+                    "Cebada": "0.52"
+               }
+          }
+     },
+     "langayo_3": {
+          "localizacion": {
+               "municipio": "langayo",
+               "parcela": 76,
+               "poligono": 8
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.86,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.86"
+               },
+               "2015": {
+                    "Barbecho": "0.86"
+               },
+               "2016": {
+                    "Barbecho": "0.86"
+               },
+               "2017": {
+                    "Cebada": "0.86"
+               },
+               "2018": {
+                    "Cebada": "0.86"
+               },
+               "2019": {
+                    "Barbecho": "0.86"
+               },
+               "2020": {
+                    "Cebada": "0.86"
+               },
+               "2021": {
+                    "Cebada": "0.86"
+               },
+               "2022": {
+                    "Cebada": "0.86"
+               },
+               "2023": {
+                    "Trigo": "0.86"
+               },
+               "2024": {
+                    "Cebada": "0.86"
+               }
+          }
+     },
+     "molino": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 2,
+               "poligono": 3
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.62,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.62"
+               },
+               "2015": {
+                    "Cebada": "0.62"
+               },
+               "2016": {
+                    "Cebada": "0.62"
+               },
+               "2017": {
+                    "Cebada": "0.62"
+               },
+               "2018": {
+                    "Cebada": "0.62"
+               },
+               "2019": {
+                    "Cebada": "0.62"
+               },
+               "2020": {
+                    "Cebada": "0.62"
+               },
+               "2021": {
+                    "Cebada": "0.62"
+               },
+               "2022": {
+                    "Trigo": "0.62"
+               },
+               "2023": {
+                    "Ajo": "0.62"
+               },
+               "2024": {
+                    "Trigo": "0.62"
+               }
+          }
+     },
+     "monte de la torre": {
+          "localizacion": {
+               "municipio": "torre de pe\u00f1afiel",
+               "parcela": 40,
+               "poligono": 102
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.47,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.47"
+               },
+               "2015": {
+                    "Cebada": "0.47"
+               },
+               "2016": {
+                    "Cebada": "0.47"
+               },
+               "2017": {
+                    "Cebada": "0.47"
+               },
+               "2018": {
+                    "Cebada": "0.47"
+               },
+               "2019": {
+                    "Barbecho": "0.47"
+               },
+               "2020": {
+                    "Cebada": "0.47"
+               },
+               "2021": {
+                    "Cebada": "0.47"
+               },
+               "2022": {
+                    "Cebada": "0.47"
+               },
+               "2023": {
+                    "Trigo": "0.47"
+               },
+               "2024": {
+                    "Cebada": "0.47"
+               }
+          }
+     },
+     "moraleja ca\u00f1ada_1": {
+          "localizacion": {
+               "municipio": "moraleja",
+               "parcela": 92,
+               "poligono": 5
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 1.59,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "1.59"
+               },
+               "2015": {
+                    "Cebada": "1.59"
+               },
+               "2016": {
+                    "Cebada": "1.59"
+               },
+               "2017": {
+                    "Trigo": "1.59"
+               },
+               "2018": {
+                    "Cebada": "1.59"
+               },
+               "2019": {
+                    "Trigo": "1.59"
+               },
+               "2020": {
+                    "Cebada": "1.59"
+               },
+               "2021": {
+                    "Trigo": "1.59"
+               },
+               "2022": {
+                    "Barbecho": "1.59"
+               },
+               "2023": {
+                    "Trigo": "1.59"
+               },
+               "2024": {
+                    "Cebada": "1.59"
+               }
+          }
+     },
+     "moraleja ca\u00f1ada_2": {
+          "localizacion": {
+               "municipio": "moraleja",
+               "parcela": 98,
+               "poligono": 5
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.3,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.3"
+               },
+               "2015": {
+                    "Cebada": "0.3"
+               },
+               "2016": {
+                    "Cebada": "0.3"
+               },
+               "2017": {
+                    "Trigo": "0.3"
+               },
+               "2018": {
+                    "Cebada": "0.3"
+               },
+               "2019": {
+                    "Trigo": "0.3"
+               },
+               "2020": {
+                    "Cebada": "0.3"
+               },
+               "2021": {
+                    "Trigo": "0.3"
+               },
+               "2022": {
+                    "Barbecho": "0.3"
+               },
+               "2023": {
+                    "Trigo": "0.3"
+               },
+               "2024": {
+                    "Cebada": "0.3"
+               }
+          }
+     },
+     "moraleja ca\u00f1ada_3": {
+          "localizacion": {
+               "municipio": "moraleja",
+               "parcela": 52,
+               "poligono": 5
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.39,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.39"
+               },
+               "2015": {
+                    "Barbecho": "0.39"
+               },
+               "2016": {
+                    "Cebada": "0.39"
+               },
+               "2017": {
+                    "Trigo": "0.39"
+               },
+               "2018": {
+                    "Cebada": "0.39"
+               },
+               "2019": {
+                    "Trigo": "0.39"
+               },
+               "2020": {
+                    "Cebada": "0.39"
+               },
+               "2021": {
+                    "Trigo": "0.39"
+               },
+               "2022": {
+                    "Barbecho": "0.39"
+               },
+               "2023": {
+                    "Trigo": "0.39"
+               },
+               "2024": {
+                    "Cebada": "0.39"
+               }
+          }
+     },
+     "perosillo": {
+          "localizacion": {
+               "municipio": "perosillo",
+               "parcela": 5015,
+               "poligono": 2
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 0.3,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "0.3"
+               },
+               "2015": {
+                    "Cebada": "0.3"
+               },
+               "2016": {
+                    "Cebada": "0.3"
+               },
+               "2017": {
+                    "Cebada": "0.3"
+               },
+               "2018": {
+                    "Barbecho": "0.3"
+               },
+               "2019": {
+                    "Barbecho": "0.3"
+               },
+               "2020": {
+                    "Cebada": "0.3"
+               },
+               "2021": {
+                    "Barbecho": "0.3"
+               },
+               "2022": {
+                    "Barbecho": "0.3"
+               },
+               "2023": {
+                    "Trigo": "0.3"
+               },
+               "2024": {
+                    "Barbecho": "0.3"
+               }
+          }
+     },
+     "picacho_1": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 41,
+               "poligono": 6
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 4.06,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "4.06"
+               },
+               "2015": {
+                    "Cebada": "4.06"
+               },
+               "2016": {
+                    "Cebada": "4.06"
+               },
+               "2017": {
+                    "Cebada": "4.06"
+               },
+               "2018": {
+                    "Cebada": "4.06"
+               },
+               "2019": {
+                    "Cebada": "4.06"
+               },
+               "2020": {
+                    "Cebada": "4.06"
+               },
+               "2021": {
+                    "Cebada": "4.06"
+               },
+               "2022": {
+                    "Trigo": "4.06"
+               },
+               "2023": {
+                    "Girasol": "3.94",
+                    "Trigo": "0.12"
+               },
+               "2024": {
+                    "Barbecho": "4.06"
+               }
+          }
+     },
+     "picacho_2": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 57,
+               "poligono": 6
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 4.03,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "4.03"
+               },
+               "2015": {
+                    "Cebada": "4.03"
+               },
+               "2016": {
+                    "Cebada": "4.03"
+               },
+               "2017": {
+                    "Barbecho": "4.03"
+               },
+               "2018": {
+                    "Cebada": "4.03"
+               },
+               "2019": {
+                    "Cebada": "4.03"
+               },
+               "2020": {
+                    "Cebada": "4.03"
+               },
+               "2021": {
+                    "Cebada": "4.03"
+               },
+               "2022": {
+                    "Trigo": "4.03"
+               },
+               "2023": {
+                    "Trigo": "4.03"
+               },
+               "2024": {
+                    "Guisante": "4.03"
+               }
+          }
+     },
+     "picacho_3": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 58,
+               "poligono": 6
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 3.94,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "3.94"
+               },
+               "2015": {
+                    "Cebada": "3.94"
+               },
+               "2016": {
+                    "Cebada": "3.94"
+               },
+               "2017": {
+                    "Cebada": "3.94"
+               },
+               "2018": {
+                    "Cebada": "3.94"
+               },
+               "2019": {
+                    "Cebada": "3.94"
+               },
+               "2020": {
+                    "Cebada": "3.94"
+               },
+               "2021": {
+                    "Barbecho": "3.94"
+               },
+               "2022": {
+                    "Trigo": "3.94"
+               },
+               "2023": {
+                    "Trigo": "3.94"
+               },
+               "2024": {
+                    "Guisante": "3.94"
+               }
+          }
+     },
+     "yunta_1": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 57,
+               "poligono": 13
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 2.98,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "2.98"
+               },
+               "2015": {
+                    "Cebada": "2.98"
+               },
+               "2016": {
+                    "Cebada": "2.98"
+               },
+               "2017": {
+                    "Trigo": "2.98"
+               },
+               "2018": {
+                    "Cebada": "2.98"
+               },
+               "2019": {
+                    "Trigo": "2.98"
+               },
+               "2020": {
+                    "Barbecho": "2.98"
+               },
+               "2021": {
+                    "Trigo": "2.98"
+               },
+               "2022": {
+                    "Trigo": "2.98"
+               },
+               "2023": {
+                    "Guisante": "2.98"
+               },
+               "2024": {
+                    "Trigo": "2.98"
+               }
+          }
+     },
+     "yunta_2": {
+          "localizacion": {
+               "municipio": "campaspero",
+               "parcela": 22,
+               "poligono": 13
+          },
+          "pozo": false,
+          "renta": false,
+          "superficie": 1.5,
+          "temporadas": {
+               "2014": {
+                    "Cebada": "1.5"
+               },
+               "2015": {
+                    "Cebada": "1.5"
+               },
+               "2016": {
+                    "Cebada": "1.5"
+               },
+               "2017": {
+                    "Trigo": "1.5"
+               },
+               "2018": {
+                    "Cebada": "1.5"
+               },
+               "2019": {
+                    "Trigo": "1.5"
+               },
+               "2020": {
+                    "Barbecho": "1.5"
+               },
+               "2021": {
+                    "Trigo": "1.5"
+               },
+               "2022": {
+                    "Trigo": "1.5"
+               },
+               "2023": {
+                    "Guisante": "1.5"
+               },
+               "2024": {
+                    "Trigo": "1.5"
+               }
+          }
+     }
+}
