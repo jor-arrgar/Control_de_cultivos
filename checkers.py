@@ -137,36 +137,54 @@ class PAC_2023_2027(PAC_checker):
         if self.fallow_percent < 0.04:
             return 7
         
-        # Leguminous proportion > 5%
-        if self.leguminous_percent < 0.05:
-            return 1
-        
-        # Up_crops proportion > 10% 
-        if self.up_crops_percent + self.leguminous_percent < 0.1:
-            return 2
+        if self.fallow_percent > 0.2:
+            return 8
         
         
         crops_sorted = sorted(self.crops_percents.items(), key=lambda item: item[1])
 
         crops_sorted_dict = {}
         [crops_sorted_dict.update({crop:surface }) for (crop, surface) in crops_sorted[::-1]]
-
-        # N crops >= 3
-        if len(crops_sorted) < 3:
-            return 3
-
+        
         crops_sorted_tuples = list(crops_sorted_dict.items())
         
-        # Main crop < 0.7
-        if crops_sorted_tuples[0][1] >= 0.7:
-            return 4
+        # Explotations bigger than 10 hc
+        if self.total_surface >= 10:
         
-        # Secondary crop + Main crop < 0.9
-        if crops_sorted_tuples[0][1] + crops_sorted_tuples[1][1] >= 0.9:
-            return 5
-        
-        if self.wrong_crop_series != []:
-            return 6
+            # Leguminous proportion > 5%
+            if self.leguminous_percent < 0.05:
+                return 1
+            
+            # Up_crops proportion > 10% 
+            if self.up_crops_percent + self.leguminous_percent < 0.1:
+                return 2
+            
+
+            # N crops >= 3
+            if len(crops_sorted) < 3:
+                return 3
+
+
+            # Main crop < 0.7
+            if crops_sorted_tuples[0][1] >= 0.7:
+                return 4
+            
+            # Secondary crop + Main crop < 0.9
+            if crops_sorted_tuples[0][1] + crops_sorted_tuples[1][1] >= 0.9:
+                return 5
+            
+            if self.wrong_crop_series != []:
+                return 6
+            
+        # Exploitations smaller than 10 hc
+        else:
+            # N crops >= 2:
+            if len(crops_sorted) < 2:
+                return 9
+            
+            # Main crop < 0.75
+            if crops_sorted_tuples[0][1] >= 0.75:
+                return 10
         
         
         # All test passed
@@ -183,7 +201,10 @@ class PAC_2023_2027(PAC_checker):
                   4: 'Cultivo mayoritario en exceso (> 70%)',
                   5: 'Suma de cultivo mayoritario y secundario en exceso (> 90%)',
                   6: '3 años seguidos con el mismo cultivo',
-                  7: 'Barchecho insuficiente (< 4%)'}
+                  7: 'Barchecho insuficiente (< 4%)',
+                  8: 'Barbecho en exceso (> 20%)',
+                  9: 'Numero insuficiente de cultivos diferenets (< 2)',
+                  10: 'Cultivo mayoritario en exceso (> 75%)'}
         
         return errors[error]
     
