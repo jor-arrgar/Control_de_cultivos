@@ -1,4 +1,6 @@
 import streamlit as st
+st.set_page_config(layout="wide")
+
 import pandas as pd
 import json
 from time import sleep
@@ -9,8 +11,11 @@ import delete_field as delf
 import displaing_explotitaion as de
 import new_season as ns
 
+import gis_elements as ge
+
 from functions import MayConv, merge_by_field
 from welcome_texts import welcome_message, help_messages
+
 
 
 
@@ -36,7 +41,7 @@ menu = st.sidebar.selectbox(MayConv('Menu pricipal').all_mayus(mayus=mayus_),
                              MayConv('Eliminar parcela').all_mayus(mayus=mayus_),
                              MayConv('Nueva temporada').all_mayus(mayus=mayus_),
                              MayConv('Visualizar explotación').all_mayus(mayus=mayus_),
-                             MayConv('Tareas').all_mayus(mayus=mayus_)))
+                             MayConv('Mapas').all_mayus(mayus=mayus_)))
 
 if menu.lower() == 'inicio':
     
@@ -130,12 +135,12 @@ if st.session_state.loaded_data:
             de.crops_distribution(file_data)
 
         
-    elif menu.lower() == 'tareas':
+    elif menu.lower() == 'mapas':
         
-        st.write('- limpiar muestra de cultivos años anteriores en tablas (tambien cuando None)')
-        st.write('- revisar todas las strings para incluirlas en "MayConv" -- a lo mejor puede cambiarse a una lambda')
-        st.write('- interacción con todas las tablas y guardado directo (previa alerta y confirmación)')
+        st.header('mapas')
+        data = ge.plot_map()
         
+        st.write(data)
 
         
 

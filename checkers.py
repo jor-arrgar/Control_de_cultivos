@@ -49,6 +49,11 @@ class PAC_checker():
         self.crops_percents = crops_percents
         self.total_surface = round(total_surface, 2)
         
+        self.crops_sorted = sorted(self.crops_percents.items(), key=lambda item: item[1])
+
+        self.crops_sorted_dict = {}
+        [self.crops_sorted_dict.update({crop:surface }) for (crop, surface) in self.crops_sorted[::-1]]
+        
         
         
     def _crop_time_series(self):
@@ -114,10 +119,32 @@ class PAC_checker():
         return self.crops, self.crops_percents, self.wrong_crop_series
     
     
-                      
+class Ecoregimen():
+    
+    def __init__(self, checker=PAC_checker):
+        
+        checker = checker
+        
+
+             
 
 
 class PAC_2023_2027(PAC_checker):
+    
+    wrong_serie ='Más de 3 temporadas con el mismo cultivo en:\n'
+    min2 = 'Mínimo 2 cultivos diferentes en la explotación'
+    min3 = 'Mínimo 3 cultivos diferentes en la explotación'
+    or_rotation = ' (o aplicar un 50\% de rotación)'
+    main75 = 'El cultivo principal supera el 75\% de la superficie'
+    main70 = 'El cultivo principal supera el 70\% de la superficie'
+    mainSec90 = 'El cultivo principal junto con el secundario superan el 90% de la superficie'
+    min_fallow = 'La superficie dedicada a elementos no productivos es menor del 4%'
+    max_fallow = 'La superficie dedicada a elementos no productivos es mayor del 20%'
+    min_legums = 'La superficie dedicada a especies leguminosas es menor del 5\%'
+    min_upCrops = 'La superficie dedicada a especies mejorantes es menor del 10\%'
+    
+    eco345 = 'Ecorregimenes 3, 4 o 5 (Rotaciones y siembra directa)'
+    p3 = 'Práctica nº 3 (Rotación de cultivos con especies mejorantes)'
     
     def __init__(self, fields_dataframe):
         
@@ -132,82 +159,155 @@ class PAC_2023_2027(PAC_checker):
         return super().return_info()
     
     
-    def check_proportions(self):
+    def check_conditionality(self):
         
-        if self.fallow_percent < 0.04:
-            return 7
+        crops_sorted_tuples = list(self.crops_sorted_dict.items())
         
-        if self.fallow_percent > 0.2:
-            return 8
+        # BCAM 7
+            # Max 3 years with the same crop
+        if self.wrong_crop_series != []:
+            return f'BCAM7_series*{self.wrong_crop_series}'
         
-        
-        crops_sorted = sorted(self.crops_percents.items(), key=lambda item: item[1])
+            # Diversify crop surface
+        if 10 < self.total_surface <= 20:
+            if len(self.crops) < 2:
+                return 'BCAM7_surf_10-20_N'
+            if self.crops_sorted[0][1] > 0.75:
+                return 'BCAM7_surf_10-20_%'
 
-        crops_sorted_dict = {}
-        [crops_sorted_dict.update({crop:surface }) for (crop, surface) in crops_sorted[::-1]]
-        
-        crops_sorted_tuples = list(crops_sorted_dict.items())
-        
-        # Explotations bigger than 10 hc
-        if self.total_surface >= 10:
-        
-            # Leguminous proportion > 5%
-            if self.leguminous_percent < 0.05:
-                return 1
+        elif 20 < self.total_surface <= 30:
+            if len(self.crops) < 2:
+                return 'BCAM7_surf_20-30_N'
+            if self.crops_sorted[0][1] > 0.7:
+                return 'BCAM7_surf_20-30_%'
             
-            # Up_crops proportion > 10% 
-            if self.up_crops_percent + self.leguminous_percent < 0.1:
-                return 2
-            
-
-            # N crops >= 3
-            if len(crops_sorted) < 3:
-                return 3
-
-
-            # Main crop < 0.7
-            if crops_sorted_tuples[0][1] >= 0.7:
-                return 4
-            
-            # Secondary crop + Main crop < 0.9
-            if crops_sorted_tuples[0][1] + crops_sorted_tuples[1][1] >= 0.9:
-                return 5
-            
-            if self.wrong_crop_series != []:
-                return 6
-            
-        # Exploitations smaller than 10 hc
         else:
-            # N crops >= 2:
-            if len(crops_sorted) < 2:
-                return 9
+            if len(self.crops) < 3:
+                return 'BCAM7_surf_>30_N'
+            if self.crops_sorted[0][1] > 0.7:
+                return 'BCAM7_surf_>30_%1'
+            if (self.crops_sorted[0][1] + self.crops_sorted[1][1]) > 0.9:
+                return 'BCAM7_surf_>30_%12'
+        
+        # BCAM 8
+            # >= 4% non-productive surface
+        if self.fallow_percent < 0.04:
+            return 'BCAM8_non-prod'
+        
+        # Condidionality correct
+        return 0
+    
+    def check_ecoregimen(self, ecoregimen):
+        
+        if ecoregimen in [3, 4, 5]: # Rotación y siembra directa en secano, secano húmedo y regadío
+
+
             
-            # Main crop < 0.75
-            if crops_sorted_tuples[0][1] >= 0.75:
-                return 10
+            crops_sorted_tuples = list(self.crops_sorted_dict.items())
+            
+            if self.total_surface < 10:
+                #if rotation > 0.5:
+                    #return 0
+                #else:
+                if len(self.crops) < 2:
+                    return 'EcoReg_345_<10_N'  # Includes the rotation % error
+                else:
+                    if self.crops_percents[0][1] > 0.75:
+                        return 'EcoReg_345_<10_%'
+                    else:
+                        return 0
+                    
+            else:
+                if len(self.crops) < 3:
+                    return 'EcoReg_345_>10_N'
+                
+                if self.fallow_percent > 0.2:
+                    return 'EcoReg_345_>10_maxFallow'
+                    
+                # Leguminous proportion > 5%
+                if self.leguminous_percent < 0.05:
+                    return 'EcoReg_345_>10_legums'
+                
+                # Up_crops proportion > 10% 
+                if self.up_crops_percent + self.leguminous_percent < 0.1:
+                    return 'EcoReg_345_>10_upCrops'
+                
+                # Rotation at least in 50%
+                #if rotation < 0.5:
+                    #return 'EcoReg_345_>10_rotation
+                
+                
+
         
-        
-        # All test passed
-        return 0        
+    
+  
         
     
     @staticmethod
-    def translate_error(error):
+    def error_code_translator(error_):
         
-        errors = {0: 'Distribución correcta',
-                  1: 'Leguminosas insuficientes (< 5%)',
-                  2: 'Especies mejorantes insufieintes (< 10%)',
-                  3: 'Numero insuficiente de cultivos diferentes (< 3)',
-                  4: 'Cultivo mayoritario en exceso (> 70%)',
-                  5: 'Suma de cultivo mayoritario y secundario en exceso (> 90%)',
-                  6: '3 años seguidos con el mismo cultivo',
-                  7: 'Barchecho insuficiente (< 4%)',
-                  8: 'Barbecho en exceso (> 20%)',
-                  9: 'Numero insuficiente de cultivos diferenets (< 2)',
-                  10: 'Cultivo mayoritario en exceso (> 75%)'}
+        if '*' in error_:
+            split = error.split('*')
+            fields = eval(split[1])
+            error = split[0]
+        else:
+            fields = ''
+            error = error_
         
-        return errors[error]
-    
+
+        self = PAC_2023_2027
         
-    
+        errors = {'BCAM7_series': ('BCAM 7', self.wrong_serie + str(fields), None),
+                  'BCAM7_surf_10-20_N':('BCAM 7', self.min2, None),
+                  'BCAM7_surf_10-20_%':('BCAM 7', self.main75, None),
+                  'BCAM7_surf_20-30_N':('BCAM 7', self.min2, None),
+                  'BCAM7_surf_20-30_%':('BCAM 7', self.main70, None),
+                  'BCAM7_surf_>30_N':('BCAM 7', self.min3, None),
+                  'BCAM7_surf_>30_%1':('BCAM 7', self.main70, None),
+                  'BCAM7_surf_>30_%12':('BCAM 7', self.mainSec90, None),
+                  'BCAM8_non-prod':('BCAM 8', self.min_fallow, None),
+                  'EcoReg_345_<10_N':(self.eco345, self.min2+self.or_rotation, self.p3),
+                  'EcoReg_345_<10_%':(self.eco345, self.main75+self.or_rotation, self.p3),
+                  'EcoReg_345_>10_N':(self.eco345, self.min3, self.p3),
+                  'EcoReg_345_>10_maxFallow':(self.eco345, self.max_fallow, self.p3),
+                  'EcoReg_345_>10_legums':(self.eco345, self.min_legums, self.p3),
+                  'EcoReg_345_>10_upCrops':(self.eco345, self.min_upCrops, self.p3)
+                  }
+        
+        main_, message, secondary = errors[error]
+        
+        return main_, message, secondary
+
+    @staticmethod
+    def error_messages_integrator(list_of_errors):
+        
+        if len(list_of_errors) == 0:
+            return None, None
+        
+        self = PAC_2023_2027
+        
+        grouped_bcam = {'BCAM 7': [],
+                        'BCAM 8': []}
+        grouped_ecoreg = {self.eco345:{self.p3:[]}}
+        
+        bcam = False
+        ecoreg = False
+        
+        for main_, message, secondary in list_of_errors:
+            if main_[:4] == 'BCAM':
+                grouped_bcam[main_].append(message)
+                bcam = True
+            elif main_[:13] == 'Ecorregimenes':
+                grouped_ecoreg[main_][secondary].append(message)
+                ecoreg = True
+        
+        if not bcam:
+            return None, grouped_ecoreg
+        if not ecoreg:
+            return grouped_bcam, None
+        return grouped_bcam, grouped_ecoreg
+                
+            
+
+            
         
