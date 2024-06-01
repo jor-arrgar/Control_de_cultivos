@@ -81,6 +81,9 @@ if st.session_state.loaded_data:
 # START NEW SEASON
     elif menu.lower() == 'nueva temporada':
         modal = help_messages(menu, c2, mayus_=mayus_)
+        
+        # st.write(st.session_state.file_data) => diccionario de tierras       
+        
 
         st.title(MayConv('Nueva temporada').all_mayus(mayus=mayus_))
                 
@@ -94,14 +97,21 @@ if st.session_state.loaded_data:
             field_divisions, last_years = ns.set_field_divisions(file_data, show)
             
             if field_divisions is not None:
-                st.subheader(MayConv('Selección de cultivo').all_mayus(mayus=mayus_))
+                c1, c2 = st.columns((3, 1))
+                c1.subheader(MayConv('Selección de cultivo').all_mayus(mayus=mayus_))
+                c2.write('<p style=font-size:10px;color:red;font-weight:bold>Por alguna razón, si se quiere establecer un intercambio tiene que hacerse antes de cualquier cultivo</p>',
+                         unsafe_allow_html=True)
                 
                 
                 new_crops_df = ns.set_crops(field_divisions, last_years)
-                
+                exchanged = ns.field_exchange(new_crops_df)
+                if exchanged is not None:
+                    exchanged_df = pd.DataFrame(exchanged)
+                else:
+                    exchanged_df = None
                 # función de checkeo de condiciones PAC
 
-                check_ = ns.checker(new_crops_df)
+                check_ = ns.checker(new_crops_df, exchanged_df)
                 merged_fields = merge_by_field(new_crops_df)
 
 
@@ -110,12 +120,14 @@ if st.session_state.loaded_data:
                 if st.sidebar.button('Relacion catastral'):
                     ns.display_fields_pop_up(file_data)
                     
+                #file_data_ = ns.add_new_season(file_data, exchanged_df, merged_fields, year)
+                #st.write(file_data_)
                 if bypass and replace and not_assigned and st.button('Update'):
                     
-                    file_data_ = ns.add_new_season(file_data, merged_fields, year)
-
+                    file_data_ = ns.add_new_season(file_data, exchanged_df, merged_fields, year)
+                    st.write(file_data_)
                     st.session_state.file_data = file_data_
-                    st.experimental_rerun()
+                    #st.experimental_rerun()
                 
         
     

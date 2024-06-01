@@ -14,9 +14,10 @@ class PAC_checker():
     # Number of following same crop allowed => [1, 1, 1]  (3 años seguidos)
     not_allowed_time_series = []
     
-    def __init__(self, fields_dataframe):
+    def __init__(self, fields_dataframe, exchange_dataframe):
         
         self.data = fields_dataframe
+        self.exchange = exchange_dataframe
         
         self._crop_distribution()
         self._crop_time_series()
@@ -27,17 +28,31 @@ class PAC_checker():
         
         crops = {}
         
-        for surface, crop in self.data[['Superficie', 'Cultivo']].values:
-            
-            if crop == 'None':
-                crop = 'Sin asignar'
-            
-            if crop not in crops.keys():
-                crop_surface = float(surface)
-            
-            else:
-                crop_surface = crops[crop] + float(surface)
-            
+        for field_name, surface, crop, exchanged in self.data[['Parcela', 'Superficie', 'Cultivo', 'Intercambio']].values:
+
+            if not exchanged:
+                if crop == 'None':
+                    crop = 'Sin asignar'
+                
+                if crop not in crops.keys():
+                    crop_surface = float(surface)
+                
+                else:
+                    crop_surface = crops[crop] + float(surface)
+                    
+            elif exchanged == 1:
+                exchanged_field = self.exchange[self.exchange['parcela original'] == field_name]
+
+                crop = list(exchanged_field['cultivo'])[0]
+                
+                if crop == '':
+                    crop = 'Sin asignar'
+                
+                if crop not in crops.keys():
+                    crop_surface = list(exchanged_field['superficie'])[0]
+                else:
+                    crop_surface = crops[crop] + list(exchanged_field['superficie'])[0]
+
             crops.update({crop:crop_surface})
 
         total_surface = sum(crops.values())
@@ -64,11 +79,9 @@ class PAC_checker():
         for fields in self.data.values:
             
             field = fields[0]
-            
-            
             #past_crops_ = [crop.replace('[', '').replace(']', '').replace("'", '') for crop in list(set(fields[2:-1]))]
             past_crops = {}
-            past_crops_lists = [eval(year) for year in fields[2:-1]]
+            past_crops_lists = [eval(year) for year in fields[2:-2]]
 
             past_crops_list = []
             
@@ -146,10 +159,10 @@ class PAC_2023_2027(PAC_checker):
     eco345 = 'Ecorregimenes 3, 4 o 5 (Rotaciones y siembra directa)'
     p3 = 'Práctica nº 3 (Rotación de cultivos con especies mejorantes)'
     
-    def __init__(self, fields_dataframe):
+    def __init__(self, fields_dataframe, exchange_dataframe):
         
         self.not_allowed_time_series = [1,1,1]
-        super().__init__(fields_dataframe)
+        super().__init__(fields_dataframe, exchange_dataframe)
         self.barbecho_surface = round(self.total_surface * 0.04, 2)
         self.ecoschemas = {}
         
@@ -162,40 +175,44 @@ class PAC_2023_2027(PAC_checker):
     def check_conditionality(self):
         
         crops_sorted_tuples = list(self.crops_sorted_dict.items())
-        
+
+        unfullfilments = []
         # BCAM 7
             # Max 3 years with the same crop
         if self.wrong_crop_series != []:
-            return f'BCAM7_series*{self.wrong_crop_series}'
+            unfullfilments.append(f'BCAM7_series*{self.wrong_crop_series}')
         
             # Diversify crop surface
         if 10 < self.total_surface <= 20:
             if len(self.crops) < 2:
-                return 'BCAM7_surf_10-20_N'
-            if self.crops_sorted[0][1] > 0.75:
-                return 'BCAM7_surf_10-20_%'
+                unfullfilments.append('BCAM7_surf_10-20_N')
+            if self.crops_sorted[-1][1] > 0.75:
+                unfullfilments.append('BCAM7_surf_10-20_%')
 
         elif 20 < self.total_surface <= 30:
             if len(self.crops) < 2:
-                return 'BCAM7_surf_20-30_N'
-            if self.crops_sorted[0][1] > 0.7:
-                return 'BCAM7_surf_20-30_%'
+                unfullfilments.append('BCAM7_surf_20-30_N')
+            if self.crops_sorted[-1][1] > 0.7:
+                unfullfilments.append('BCAM7_surf_20-30_%')
             
         else:
             if len(self.crops) < 3:
-                return 'BCAM7_surf_>30_N'
+                unfullfilments.append('BCAM7_surf_>30_N')
             if self.crops_sorted[0][1] > 0.7:
-                return 'BCAM7_surf_>30_%1'
-            if (self.crops_sorted[0][1] + self.crops_sorted[1][1]) > 0.9:
-                return 'BCAM7_surf_>30_%12'
+                unfullfilments.append('BCAM7_surf_>30_%1')
+            if (self.crops_sorted[-1][1] + self.crops_sorted[-2][1]) > 0.9:
+                unfullfilments.append('BCAM7_surf_>30_%1+2')
         
         # BCAM 8
             # >= 4% non-productive surface
         if self.fallow_percent < 0.04:
-            return 'BCAM8_non-prod'
+            unfullfilments.append('BCAM8_non-prod')
         
-        # Condidionality correct
-        return 0
+        if len(unfullfilments) == 0:
+            # Condidionality correct
+            return 0
+        else:
+            return unfullfilments
     
     def check_ecoregimen(self, ecoregimen):
         
@@ -205,36 +222,42 @@ class PAC_2023_2027(PAC_checker):
             
             crops_sorted_tuples = list(self.crops_sorted_dict.items())
             
+            unfullfilments = []
+            
             if self.total_surface < 10:
                 #if rotation > 0.5:
                     #return 0
                 #else:
                 if len(self.crops) < 2:
-                    return 'EcoReg_345_<10_N'  # Includes the rotation % error
+                    unfullfilments.append('EcoReg_345_<10_N')  # Includes the rotation % error
                 else:
                     if self.crops_percents[0][1] > 0.75:
-                        return 'EcoReg_345_<10_%'
-                    else:
-                        return 0
+                        unfullfilments.append('EcoReg_345_<10_%')
+                
                     
             else:
                 if len(self.crops) < 3:
-                    return 'EcoReg_345_>10_N'
+                    unfullfilments.append('EcoReg_345_>10_N')
                 
                 if self.fallow_percent > 0.2:
-                    return 'EcoReg_345_>10_maxFallow'
+                    unfullfilments.append('EcoReg_345_>10_maxFallow')
                     
                 # Leguminous proportion > 5%
                 if self.leguminous_percent < 0.05:
-                    return 'EcoReg_345_>10_legums'
+                    unfullfilments.append('EcoReg_345_>10_legums')
                 
                 # Up_crops proportion > 10% 
                 if self.up_crops_percent + self.leguminous_percent < 0.1:
-                    return 'EcoReg_345_>10_upCrops'
+                    unfullfilments.append('EcoReg_345_>10_upCrops')
                 
                 # Rotation at least in 50%
                 #if rotation < 0.5:
                     #return 'EcoReg_345_>10_rotation
+            
+            if len(unfullfilments) > 0:
+                return unfullfilments
+            else:
+                return 0
                 
                 
 
@@ -264,7 +287,7 @@ class PAC_2023_2027(PAC_checker):
                   'BCAM7_surf_20-30_%':('BCAM 7', self.main70, None),
                   'BCAM7_surf_>30_N':('BCAM 7', self.min3, None),
                   'BCAM7_surf_>30_%1':('BCAM 7', self.main70, None),
-                  'BCAM7_surf_>30_%12':('BCAM 7', self.mainSec90, None),
+                  'BCAM7_surf_>30_%1+2':('BCAM 7', self.mainSec90, None),
                   'BCAM8_non-prod':('BCAM 8', self.min_fallow, None),
                   'EcoReg_345_<10_N':(self.eco345, self.min2+self.or_rotation, self.p3),
                   'EcoReg_345_<10_%':(self.eco345, self.main75+self.or_rotation, self.p3),
