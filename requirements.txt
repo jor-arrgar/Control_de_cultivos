@@ -4,3 +4,5 @@ plotly == 5.15.0
 seaborn == 0.12.2
 streamlit-modal
 streamlit-aggrid
+folium
+streamlit-folium
