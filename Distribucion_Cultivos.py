@@ -19,6 +19,8 @@ from welcome_texts import welcome_message, help_messages
 
 
 
+
+
 # Setting mayus letters
 def set_mayus_letters(c):
     '''Sets the session state for the mayus letters in texts, using a checkbox as reference.\nReturns nothing.'''

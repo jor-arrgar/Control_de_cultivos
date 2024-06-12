@@ -1,0 +1,102 @@
+Despliegue de Control de Cultivos en Azure
+
+===================================================================
+
+	=> DESPLIEGUE CON AZURE URL DE ACCESO PÚBLICO
+
+1. Crear Grupo de Recursos (GR)
+2. Creación de Presupuesto y establecimiento de alertas (se establecen % a los que avisar, tanto reales como de previsión)
+3. Creación de WebApp
+	- Nombre de webapp
+	- SKU (B1 mínimo para Streamlit)
+	- Si se quiere CI, se puede conectar con el repositorio desde esta sección y saltar el paso 4, salvo el último punto
+	- Habilitar autenticación básica
+	- Haibilitar acceso público
+	- No Application Insights
+	- Etiquetas
+4. Una vez creada, ir al recurso, Introduccion, Centro de Implementación:
+		- Seleccionar GitHub como fuente de código
+		- (Autorizar GitHub)
+		- Seleccionar repositorio
+		- Seleccionar una Identidad asignada por el usuario (o crear una nueva)
+		- Lanzar y esperar a que compile (puede verse desde el panel Introducción de la WebApp, Propiedades, Centro de Implementación, Ultima Implementación (En curso... => Correcto... ; tarda un rato)	
+5. Establecimiento del comando de inicio  en el panel Configuración, Comando de inicio
+	- Escribir el comando de inicio de Streamlit adecuado para la app en el cuadro Comando de inicio
+		python -m streamlit run main.py --server.port 8000 --server.address 0.0.0.0
+	- Guardar cambios
+	- Reiniciar WebApp desde panel de Introducción, Reiniciar
+	- Esperar a compilación
+
+=> La aplicación ya puede accederse desde la url de azure (https://controldecultivos.azurewebsites.net/)
+
+
+	=> DESPLIEGUE DE RED PRIVADA VIRTUAL
+
+1. Crear red virtual (VNET).
+	- Por defecto, la VNET tiene 65536 direcciones (/16)
+	- Si se añade un firewall directamente desde el proceso de creación de la VNET, este va a consumir 64 direcciones por defecto (/26). Esta espacio CIDR solo admite espacios de VNET menores de /23 (512 direcciones, a menor /nº, mayor cantidad de IPs)
+
+2. Una vez creada la VNET, crear las diferentes subnets que se necesiten desde la sección "Subredes" del recurso.
+3. Gateway Subnet 
+	- Crear un Espacio de Direcciones específico para la Gateway Subnet (/28 ; 16 IPs)
+	- Crear la Gateway Subnet alojandola en este espacio recién creado
+	- En la creción de la Gateway Subnet, establecer "Tablas de rutas" (UDRs) como Directiva de red de punto de conexion privado
+4. Firewall subnet
+	- Si no se ha creado previamente, se tendrá que crear una subnet (nuevo Espacio de direcciones) dedicada
+5. Application Gateway subnet
+	- También necesita su subnet exclusiva
+
+	
+	AzureFirewallSubnet: 10.0.1.0/26 (10.0.1.0 - 10.0.1.63) (56 disponibles)
+	EndPoints_Subnet: 10.0.0.0/24 (10.0.0.0 - 10.0.0.255) (251 disponibles)
+	GatewaySubnet = 10.0.2.0/28 (10.0.2.0 - 10.0.2.15) (disponibilidad dinámica)
+	ApplicationGateway_Subnet = 10.0.3.0/27 (10.0.3.0 - 10.0.3.31)
+
+
+	=> CREAR APPLICATION GATEWAY
+
+1. Establecer nombre, sku, número de instanceas (3 por si cobran más), zonas de disponibilidad (1 por si cobran más) y subnet
+2. Establecer un frontend (puerta de entrada). Puede ser IP pública, privada o ambos (se puede crear nuevas IPs públicas directamente, en este caso se llama "controldcultivos" y su dirección es 20.19.33.94)
+3. Establecer grupo de back-end
+	- Estos grupos son simplemente un conjunto de IPs de destino a los que se redirige el tráfico que entra al application gateway
+	- Azure permite seleccionar de forma interactiva los elementos a los que se puede conectar, como VMs, web apps o directamente IPs. Aquí se seleciona a través de webapp.	
+	- Solo de debe incluir el recurso al que van a tener acceso los usuarios. La conexión de desarrollador se realiza de otra manera
+
+4. Una vez creados los grupos de front-end y de back-end, se establecen las reglas de enrutamiento
+	- Establecer el nombre y la prioridad
+	- Establecer el agente de escucha (HTTP en puerto 80)
+	- Establecer los destinos de backend (seleccionando el grupo de backend creado previamente), se selecciona una configuración (HTTP puerto 80). 
+
+5. Crear Application Gateway y esperar a que se implemente
+
+
+	=> CONECTAR LA WEBAPP CON LA VNET
+
+1. Agregar un punto de conexion privado en la sección Redes de la webapp. Para ello, entrar en la sección Puntos de conexion privados, Crear y Azanzado
+	- Establecer nombre y seleccionar VNET a la que estará asociado. 
+	- En la configuración de IP privada, establecer estáticamente la IP que se ha establecido previamente como conexion del grupo de backend de la Application gateway
+
+
+
+
+
+
+
+
+
+1. En la seción Redes de la webapp, configurar las puertas de entrada (Configuracion del tráfico entrante, configuación del tráfico saliente)
+	- Establecer nombre y si puede crearse vacio
+	- Establecer destinos (multiples opciones, se usarán las IPs)
+		
+
+
+
+============================================================
+CONECTAR APPLICATION GATEWAY A WEBAPP
+
+1. Crear aplication gateway con su subnet dedicada, una IP publica, un grupo de backend y una regla que una ambos a través de un listener
+
+2. Despues, crear puntos de conexion de servicio en la vnet para que puedan conectarse servicion web de azure
+
+3. Modificar las Restricciones de acceso de la webapp para que solo acepte conexiones desde la subnet de la app gateway (puede hacerse de forma interactiva integramente)
+
