@@ -6,4 +6,6 @@ streamlit-modal
 streamlit-aggrid
 folium
 streamlit-folium
-azure
+azure-core
+azure-keyvault-secrets
+azure-identity
