@@ -7,5 +7,5 @@ streamlit-aggrid
 folium
 streamlit-folium
 azure-core
-azure-keyvault-secrets
+azure-keyvault
 azure-identity

@@ -16,9 +16,12 @@ import gis_elements as ge
 from functions import MayConv, merge_by_field
 from welcome_texts import welcome_message, help_messages
 
-
-from azure.identity import DefaultAzureCredential
-from azure.keyvault.secrets import SecretClient
+try:
+    from azure.identity import DefaultAzureCredential
+    from azure.keyvault.secrets import SecretClient
+except ModuleNotFoundError:
+    from identity import DefaultAzureCredential
+    from keyvault.secrets import SecretClient   
 
 
 
