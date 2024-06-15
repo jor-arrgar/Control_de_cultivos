@@ -17,7 +17,8 @@ from functions import MayConv, merge_by_field
 from welcome_texts import welcome_message, help_messages
 
 
-
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 
 
 
@@ -43,7 +44,8 @@ menu = st.sidebar.selectbox(MayConv('Menu pricipal').all_mayus(mayus=mayus_),
                              MayConv('Eliminar parcela').all_mayus(mayus=mayus_),
                              MayConv('Nueva temporada').all_mayus(mayus=mayus_),
                              MayConv('Visualizar explotación').all_mayus(mayus=mayus_),
-                             MayConv('Mapas').all_mayus(mayus=mayus_)))
+                             MayConv('Mapas').all_mayus(mayus=mayus_),
+                             MayConv('Azure tests').all_mayus(mayus=mayus_)))
 
 if menu.lower() == 'inicio':
     
@@ -186,3 +188,24 @@ if (file_name is not None) and (file_data is not None) and (file_name != ''):
                        data=file_data_json,
                        file_name=file_name+'.json',
                        mime='application/json')
+
+
+elif menu == 'Azure tests':
+    st.header('Azure tests')
+    
+    if st.checkbox('Conectar con KeyVault'):
+        # URL de tu Key Vault
+        key_vault_url = "https://cdc-keyvault.vault.azure.net/"
+
+        # Crear el cliente con autenticación
+        credential = DefaultAzureCredential()
+        client = SecretClient(vault_url=key_vault_url, credential=credential)
+
+        # Obtener un secreto
+        secret_name = "CdC-KeyVault-secret-test"
+        retrieved_secret = client.get_secret(secret_name)
+
+        # Utilizar el valor del secreto
+        secret_value = retrieved_secret.value
+        
+        st.write(secret_value)
