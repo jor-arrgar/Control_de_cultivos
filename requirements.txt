@@ -6,3 +6,4 @@ streamlit-modal
 streamlit-aggrid
 folium
 streamlit-folium
+azure
