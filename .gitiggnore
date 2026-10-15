@@ -2,6 +2,6 @@
 *.ipynb
 __pycache__
 *.json
-EXPLOTACIONES
+_EXPLOTACIONES
 .agents
 *.venv
