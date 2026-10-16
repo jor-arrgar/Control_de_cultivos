@@ -3,6 +3,9 @@
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
 name: Build and deploy Python app to Azure Web App - ControlDeCultivos
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   push:
