@@ -1,8 +1,0 @@
-
-[client]
-showSidebarNavigation = false
-
-
-
-[server]
-fileWatcherType = "poll"
