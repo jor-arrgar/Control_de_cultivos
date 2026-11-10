@@ -14,12 +14,21 @@ from lib.pages.p0_inicio.welcome_texts import welcome_message, help_messages
 from lib.pages.p2_temporadas.new_season import set_field_divisions, set_crops, field_exchange, checker, check_for_bypasses, add_new_season, display_fields_pop_up
 from lib.support.functions import merge_by_field
 from lib.support.prev_data_management import  manage_previous_data, download_file_with_data
+from lib.support.functions import check_fastapi_status
 
 
 # MARK: Page initialization
 navigation_menu()
 accesibility(show_strings=False)
-manage_previous_data()
+
+
+working_fastapi = check_fastapi_status()
+if not working_fastapi:
+    st.warning("La API no está disponible. Algunas funciones pueden no funcionar correctamente.", icon="⚠️")
+    manage_previous_data(mode='local')
+else:
+    st.success("La API está disponible.", icon="✅")
+    manage_previous_data(mode='cloud')
 
 
 # MARK: Page content
