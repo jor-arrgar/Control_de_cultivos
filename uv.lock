@@ -275,6 +275,7 @@ dependencies = [
     { name = "streamlit" },
     { name = "streamlit-aggrid" },
     { name = "streamlit-folium" },
+    { name = "uvicorn", extra = ["standard"] },
 ]
 
 [package.metadata]
@@ -287,6 +288,7 @@ requires-dist = [
     { name = "streamlit", specifier = "==1.65.0" },
     { name = "streamlit-aggrid" },
     { name = "streamlit-folium" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.54.0" },
 ]
 
 [[package]]

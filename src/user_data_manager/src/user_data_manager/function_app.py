@@ -87,7 +87,7 @@ def get_explotation_data(req: func.HttpRequest) -> func.HttpResponse:
         status_code=200
     )
 
-
+ 
 # MARK: Get explotations
 @app.route(route="get_explotations_list")
 def get_explotations(req: func.HttpRequest) -> func.HttpResponse:

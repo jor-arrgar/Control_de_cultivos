@@ -16,6 +16,7 @@ dependencies = [
     "folium",
     "streamlit-folium",
     "fastapi[standard]>=0.162.3",
+    "uvicorn[standard]>=0.54.0",
 ]
 
 [project.scripts]
