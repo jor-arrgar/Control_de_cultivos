@@ -12,11 +12,19 @@ from lib.support.accesibility import accesibility
 from lib.pages.p0_inicio.welcome_texts import welcome_message, help_messages
 from lib.pages.p3_explotacion.displaing_explotitaion import fields_distributions, crops_distribution
 from lib.support.prev_data_management import  manage_previous_data, download_file_with_data
+from lib.support.functions import check_fastapi_status
 
 # MARK: Page initialization
 navigation_menu()
 accesibility(show_strings=False)
-manage_previous_data()
+
+working_fastapi = check_fastapi_status()
+if not working_fastapi:
+    st.warning("La API no está disponible. Algunas funciones pueden no funcionar correctamente.", icon="⚠️")
+    manage_previous_data(mode='local')
+else:
+    st.success("La API está disponible.", icon="✅")
+    manage_previous_data(mode='cloud')
 
 
 # MARK: Page content

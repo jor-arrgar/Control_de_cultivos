@@ -1,5 +1,7 @@
 import json 
-
+from typing import Literal
+import requests
+import os
 
 import streamlit as st
 
@@ -72,8 +74,9 @@ def read_previous_data():
 
 
 
-def manage_previous_data():
+def manage_previous_data(mode:Literal['local', 'cloud']='local'):
 
+    
     if 'file_data' not in st.session_state:
         st.session_state.file_data = None
     if 'loaded_data' not in st.session_state:
@@ -83,42 +86,110 @@ def manage_previous_data():
     if 'file_loader' not in st.session_state:
         st.session_state.file_loader = 0
 
-    if st.session_state.file_data is None or st.session_state.file_data == {}:
 
-        uploaded_file = st.sidebar.file_uploader('Archivo temporal', type=['.json'], key=f'uploader {st.session_state.file_loader}')
-        if uploaded_file is not None:
-            file_data = json.load(uploaded_file)
-            st.session_state.file_data = file_data
-            st.session_state.loaded_data = True
-            st.session_state.file_name = uploaded_file.name.replace('.json', '')
+    def local_file_management():
+        if st.session_state.file_data is None or st.session_state.file_data == {}:
 
-        new_file_name = st.sidebar.text_input('Nombre de archivo', disabled=uploaded_file is not None, 
-                                              value=st.session_state.file_name if 'file_name' in st.session_state else None)
-        st.session_state.file_name_to_save = new_file_name
 
-        if uploaded_file is None:
-            st.session_state.file_data = {}
-            st.session_state.loaded_data = False
-            st.session_state.file_name = new_file_name
-            
+            uploaded_file = st.sidebar.file_uploader('Archivo temporal', type=['.json'], key=f'uploader {st.session_state.file_loader}')
+
+
+
+        
+        
+            if uploaded_file is not None:
+                file_data = json.load(uploaded_file)
+                st.session_state.file_data = file_data
+                st.session_state.loaded_data = True
+                st.session_state.file_name = uploaded_file.name.replace('.json', '')
+
+            new_file_name = st.sidebar.text_input('Nombre de archivo', disabled=uploaded_file is not None, 
+                                                value=st.session_state.file_name if 'file_name' in st.session_state else None)
+            st.session_state.file_name_to_save = new_file_name
+
+            if uploaded_file is None:
+                st.session_state.file_data = {}
+                st.session_state.loaded_data = False
+                st.session_state.file_name = new_file_name
+                
+
+            else:
+                try:
+                    st.session_state.file_data = json.load(uploaded_file)
+                except:
+                    st.rerun()
+                st.session_state.loaded_data = True
+                st.session_state.file_name = uploaded_file.name.replace('.json', '')
 
         else:
-            try:
-                st.session_state.file_data = json.load(uploaded_file)
-            except:
+            c1, c2 = st.sidebar.columns((2,1))
+            c1.success(f"Archivo {mode}: {st.session_state.file_name}")
+            if c2.button('🗑️'):
+                st.session_state.file_loader += 1
+                st.session_state.loaded_data = False
+                st.session_state.file_data = None
+                st.session_state.file_name = None
                 st.rerun()
-            st.session_state.loaded_data = True
-            st.session_state.file_name = uploaded_file.name.replace('.json', '')
 
-    else:
-        c1, c2 = st.sidebar.columns((2,1))
-        c1.success(f"Archivo: {st.session_state.file_name}")
-        if c2.button('🗑️'):
-            st.session_state.file_loader += 1
-            st.session_state.loaded_data = False
-            st.session_state.file_data = None
-            st.session_state.file_name = None
-            st.rerun()
+
+    def cloud_file_management():
+        user = 'test'
+        userKey = 'test123'
+
+        FASTAPI_URL = os.getenv("FASTAPI_URL", "http://127.0.0.1:8001/")
+
+        try:
+            response = requests.get(FASTAPI_URL+"proxy/user_data/explotations", params={"user": user, "userKey": userKey, "check": 0})
+            exploitations = response.json()
+            #st.write(exploitations)
+            if exploitations and len(exploitations) > 0:
+                c1, c2 = st.sidebar.columns((4,1))
+                selected_exploitation = c1.selectbox('Seleccione una explotación', exploitations)
+                if selected_exploitation:
+                    response = requests.get(FASTAPI_URL+"proxy/user_data/explotation", params={"user": user, "userKey": userKey, "explotation": selected_exploitation, "check": 0})
+                    file_data = response.json()
+                    if len(file_data) > 0:
+                        c2.success('✅️')
+                    else:
+                        c2.error('❌️')
+                        st.sidebar.warning("No se encontraron datos para la explotación seleccionada.")
+                    st.session_state.file_data = file_data
+                    st.session_state.loaded_data = True
+                    st.session_state.file_name = selected_exploitation
+                    uploaded_file = None
+                else:
+                    uploaded_file = None
+            else:
+                st.warning("No se encontraron explotaciones para el usuario.")
+                uploaded_file = None
+
+        except requests.exceptions.RequestException as e:
+            st.error(f"Error al conectar con la API: {e}")
+            exploitations = []
+            uploaded_file = None
+        except ValueError as e:
+            st.error(f"Error al procesar la respuesta de la API: {e}")
+            exploitations = []
+            uploaded_file = None
+        except KeyError as e:
+            st.error(f"Error en la respuesta de la API: {e}")
+            exploitations = []
+            uploaded_file = None
+        except json.JSONDecodeError as e:
+            st.error(f"Error al decodificar la respuesta de la API: {e}")
+            exploitations = []
+            uploaded_file = None
+
+        except Exception as e:
+            st.error(f"Error al obtener la lista de explotaciones: {e}")
+            exploitations = []
+            uploaded_file = None
+
+
+    if mode == 'local':
+        local_file_management()
+    elif mode == 'cloud':
+        cloud_file_management()
 
 
 

@@ -6,7 +6,10 @@ st.set_page_config(
     )
 
 
+
 def main():
+
+    # @NOTE: Implement user auth system here
 
     st.switch_page("pages/0_inicio.py")
 
