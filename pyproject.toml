@@ -14,12 +14,24 @@ dependencies = [
     "seaborn",
     "streamlit-aggrid",
     "folium",
-    "streamlit-folium"
+    "streamlit-folium",
+    "fastapi[standard]>=0.162.3",
 ]
 
 [project.scripts]
 cultivos = "control_de_cultivos:main"
 
+
+
+
 [build-system]
 requires = ["uv_build>=0.13.1,<0.14.0"]
 build-backend = "uv_build"
+
+[tool.uv.workspace]
+members = [
+    "src/user_data_manager",
+]
+exclude = [
+    "src/user_data_manager"
+    ]

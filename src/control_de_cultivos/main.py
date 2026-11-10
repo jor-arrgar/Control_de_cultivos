@@ -6,6 +6,7 @@ st.set_page_config(
     )
 
 
+
 def main():
 
     st.switch_page("pages/0_inicio.py")
