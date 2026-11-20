@@ -24,10 +24,10 @@ accesibility(show_strings=False)
 
 working_fastapi = check_fastapi_status()
 if not working_fastapi:
-    st.warning("La API no está disponible. Algunas funciones pueden no funcionar correctamente.", icon="⚠️")
+    st.warning("La API no está disponible. La funcionalidad de almacenamiento en la nube no está disponible.", icon="⚠️")
     manage_previous_data(mode='local')
 else:
-    st.success("La API está disponible.", icon="✅")
+    #st.success("La API está disponible.", icon="✅")
     manage_previous_data(mode='cloud')
 
 # MARK: Page content
