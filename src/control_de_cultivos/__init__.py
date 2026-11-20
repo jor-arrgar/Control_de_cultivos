@@ -66,6 +66,7 @@ def launch_fastapi_backend(port: int = 8001):
             str(port),
             "--log-level",
             "info",
+            "--reload"
         ]
         
         print(f"   Command: {' '.join(uvicorn_command)}")
@@ -86,7 +87,7 @@ def launch_fastapi_backend(port: int = 8001):
         
         # Give process time to start properly (increase timeout)
         import time
-        time.sleep(5)  # Longer startup time
+        time.sleep(2)  # Longer startup time
         
         # Check if process is still running
         if fastapi_process.poll() is None:  # Still running
@@ -107,10 +108,10 @@ def launch_fastapi_backend(port: int = 8001):
             stdout, stderr = fastapi_process.communicate()
             print(f"   ❌ PROCESS DIED with exit code {fastapi_process.returncode}")
             
-            if stdout and len(stdout.strip()) > 100:
-                print(f"   Output:\n{stdout[-500:]}")  # Last 500 chars
+            if stdout:
+                print(f"   Output:\n{stdout[-1000:]}")  # Last 1000 chars
             
-            if stderr and len(stderr.strip()) > 100:
+            if stderr:
                 print(f"   Errors:\n{stderr[-1000:]}")  # Last 1000 chars (more for errors)
             
             return None
