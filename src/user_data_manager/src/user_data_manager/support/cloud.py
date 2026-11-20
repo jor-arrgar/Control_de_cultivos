@@ -1,9 +1,14 @@
 import os
+import struct
+import logging
+from time import sleep
 
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient 
+from sqlalchemy import create_engine, event, text
 
-from lib.support import SingletonMeta
+
+from support.support import SingletonMeta
 
 
 # MARK: Azure - main
@@ -66,8 +71,89 @@ class AzureBlobStorageManager(AzureCloudManager, metaclass=SingletonMeta):
         return list(container_client.list_blobs(name_starts_with=folder_path))
 
 
+# MARK: Azure SQL
+class AzureSQLManager(AzureCloudManager, metaclass=SingletonMeta):
+
+    SQL_COPT_SS_ACCESS_TOKEN = 1256
+    TOKEN_SCOPE = "https://database.windows.net/.default"
 
 
+    status = None
 
+    def __init__(self):
+        super().__init__()
+
+        self.engine = self.get_engine()
+
+
+    def get_engine(self):
+
+        logging.warning("=> Creating Azure SQL engine...")
+        engine = create_engine(
+                    os.getenv('SQL_CONNSTRING'),
+                    pool_pre_ping=True
+                )
+
+        # Inyectar el token de Microsoft Entra ID
+        @event.listens_for(engine, "do_connect")
+        def provide_token(dialect, conn_rec, cargs, cparams):
+
+            # SQLAlchemy añade Trusted_Connection automáticamente
+            cargs[0] = cargs[0].replace(
+                ";Trusted_Connection=Yes", ""
+            )
+
+            # Obtener token usando la sesión de az login
+            token = self.credential.get_token(self.TOKEN_SCOPE).token
+
+            # Codificación requerida por el driver ODBC
+            token_bytes = token.encode("utf-16-le")
+
+            token_struct = struct.pack(
+                f"<I{len(token_bytes)}s",
+                len(token_bytes),
+                token_bytes
+            )
+
+            cparams["attrs_before"] = {
+                self.SQL_COPT_SS_ACCESS_TOKEN: token_struct
+            }
+
+        logging.warning("=> Testing Azure SQL connection...")
+        # Probar conexión
+        try:
+            with engine.connect() as connection:
+                result = connection.execute(
+                    text("SELECT SYSTEM_USER, DB_NAME()")
+                )
+                if len(result.fetchall()) == 0:
+                    logging.error("=> Error connecting to Azure SQL Database: No results returned.")
+                    return None
+            logging.warning("=> Azure SQL connection successful.")
+            return engine
+
+        except Exception as e:
+            if e.args[0] == 'HYT00':
+                logging.error("=> Error connecting to Azure SQL Database: Connection timed out. Waiting 10 seconds before retrying...")
+                try:
+                    sleep(10)
+                    with engine.connect() as connection:
+                        result = connection.execute(
+                            text("SELECT SYSTEM_USER, DB_NAME()")
+                        )
+                        if len(result.fetchall()) == 0:
+                            logging.error("=> Error connecting to Azure SQL Database: No results returned.")
+                            return None
+                    logging.warning("=> Azure SQL connection successful on retry.")
+                    return engine
+                except Exception as retry_e:
+                    logging.error(f"=> Error connecting to Azure SQL Database on retry: {retry_e}")
+                    self.status = e
+                    return None
+            logging.error(f"=> Error connecting to Azure SQL Database: {e}")
+            self.status = e
+            return None
+
+        
 
     

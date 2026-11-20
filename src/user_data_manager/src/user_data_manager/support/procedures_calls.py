@@ -5,6 +5,8 @@ from typing import Any, Mapping
 
 from sqlalchemy import text
 
+from support.cloud import AzureSQLManager
+
 
 def _normalize_table_name(table_name: str) -> str:
     if not isinstance(table_name, str):
@@ -49,7 +51,7 @@ def _column_assignments(data: Mapping[str, Any], exclude: set[str] | None = None
     return ", ".join(assignments)
 
 
-def insert_row_generic(connection, table_name: str, row_data: Mapping[str, Any]) -> None:
+def insert_row_generic(table_name: str, row_data: Mapping[str, Any]) -> None:
     """Insert a full row into a table using a generic procedure."""
     if not row_data:
         raise ValueError("row_data cannot be empty")
@@ -66,21 +68,21 @@ def insert_row_generic(connection, table_name: str, row_data: Mapping[str, Any])
             @value_list = :value_list
         """
     )
+    try:
+        with AzureSQLManager().engine.begin() as connection:
+            connection.execute(
+                statement,
+                {
+                    "table_name": table_name,
+                    "column_list": columns,
+                    "value_list": values,
+                },
+            )
+    except Exception as e:
+        raise RuntimeError(f"Failed to insert row for table '{table_name}': {e}") from e
 
-    connection.execute(
-        statement,
-        {
-            "table_name": table_name,
-            "column_list": columns,
-            "value_list": values,
-        },
-    )
 
-    if hasattr(connection, "commit"):
-        connection.commit()
-
-
-def update_row_generic(connection, table_name: str, row_data: Mapping[str, Any]) -> None:
+def update_row_generic(table_name: str, row_data: Mapping[str, Any]) -> None:
     """Update a row in a table and save the previous state into the related history table."""
     if not row_data:
         raise ValueError("row_data cannot be empty")
@@ -103,21 +105,21 @@ def update_row_generic(connection, table_name: str, row_data: Mapping[str, Any])
             @update_assignments = :update_assignments
         """
     )
+    try:
+        with AzureSQLManager().engine.begin() as connection:
+            connection.execute(
+                statement,
+                {
+                    "table_name": table_name,
+                    "code": row_data["code"],
+                    "update_assignments": update_assignments,
+                },
+            )
+    except Exception as e:
+        raise RuntimeError(f"Failed to update row for table '{table_name}' and code '{row_data['code']}': {e}") from e
 
-    connection.execute(
-        statement,
-        {
-            "table_name": table_name,
-            "code": row_data["code"],
-            "update_assignments": update_assignments,
-        },
-    )
 
-    if hasattr(connection, "commit"):
-        connection.commit()
-
-
-def restore_previous_row_generic(connection, table_name: str, code: Any) -> None:
+def restore_previous_row_generic(table_name: str, code: Any) -> None:
     """Restore the last known version from the history table to the main table."""
     table_name = _normalize_table_name(table_name)
     statement = text(
@@ -127,11 +129,12 @@ def restore_previous_row_generic(connection, table_name: str, code: Any) -> None
             @code = :code
         """
     )
+    try:
+        with AzureSQLManager().engine.begin() as connection:
+            connection.execute(statement, {"table_name": table_name, "code": code})
 
-    connection.execute(statement, {"table_name": table_name, "code": code})
-
-    if hasattr(connection, "commit"):
-        connection.commit()
+    except Exception as e:
+        raise RuntimeError(f"Failed to restore previous row for table '{table_name}' and code '{code}': {e}") from e
 
 
 __all__ = [

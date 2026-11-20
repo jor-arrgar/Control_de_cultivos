@@ -9,3 +9,4 @@ def navigation_menu():
         st.page_link("pages/1_parcelas.py", label="Parcelas", icon="🚜")
         st.page_link("pages/2_temporadas.py", label="Temporadas", icon="📅")
         st.page_link("pages/3_explotacion.py", label="Explotación", icon="🌾")
+        st.page_link("pages/4_usuarios.py", label="Usuarios", icon="👤")

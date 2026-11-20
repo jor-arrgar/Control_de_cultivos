@@ -27,7 +27,7 @@ def merge_by_field(subfields_df):
 
 
 def check_fastapi_status():
-    FASTAPI_URL = os.getenv("FASTAPI_URL", "http://127.0.0.1:8001/health")
+    FASTAPI_URL = os.getenv("FASTAPI_URL", "http://127.0.0.1:8001") + "/health"
     try:
         response = requests.get(FASTAPI_URL)
         return response.status_code == 200
